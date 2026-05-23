@@ -102,21 +102,23 @@
 
 /* ===== Card Demo Animations ===== */
 .tcard-demo{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity 0.55s cubic-bezier(0.25,0.1,0.25,1);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.tcard:hover .tcard-demo{opacity:0.12}
+.tcard-demo::after{content:'';position:absolute;inset:15%;background:radial-gradient(ellipse at center,var(--demo-glow, rgba(59,130,246,0.08)) 0%,transparent 70%);border-radius:50%;transition:opacity 0.55s var(--ease)}
+.tcard:hover .tcard-demo{opacity:0.25}
+.tcard:hover .tcard-demo::after{opacity:1}
 .tcard-demo>*{position:absolute}
 
 /* --- Compress: pulsing shrinking box --- */
-.demo-compress .ring1{width:160px;height:120px;border:2px solid #3b82f6;border-radius:12px;animation:dcompress1 2.4s ease-in-out infinite}
-.demo-compress .ring2{width:120px;height:90px;border:2px solid #3b82f6;border-radius:10px;animation:dcompress2 2.4s ease-in-out infinite}
-.demo-compress .ring3{width:80px;height:60px;border:2px solid #3b82f6;border-radius:8px;animation:dcompress3 2.4s ease-in-out infinite}
-.demo-compress .arrow1{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:12px solid #3b82f6;animation:dcompressArr 2.4s ease-in-out infinite}
+.demo-compress .ring1{width:180px;height:130px;border:2.5px solid #3b82f6;border-radius:14px;animation:dcompress1 2.4s ease-in-out infinite}
+.demo-compress .ring2{width:135px;height:100px;border:2.5px solid #3b82f6;border-radius:11px;animation:dcompress2 2.4s ease-in-out infinite}
+.demo-compress .ring3{width:90px;height:68px;border:2.5px solid #3b82f6;border-radius:9px;animation:dcompress3 2.4s ease-in-out infinite}
+.demo-compress .arrow1{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:15px solid #3b82f6;animation:dcompressArr 2.4s ease-in-out infinite}
 @keyframes dcompress1{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(0.55);opacity:1}}
 @keyframes dcompress2{0%,100%{transform:scale(0.75);opacity:0.5}50%{transform:scale(0.35);opacity:1}}
 @keyframes dcompress3{0%,100%{transform:scale(0.5);opacity:0.5}50%{transform:scale(0.15);opacity:1}}
 @keyframes dcompressArr{0%,100%{transform:translateY(0);opacity:0}50%{transform:translateY(-14px);opacity:1}}
 
 /* --- Convert: format labels swapping --- */
-.demo-convert .fmt1,.demo-convert .fmt2{font-family:var(--font-mono);font-size:13px;font-weight:700;color:#6366f1;padding:8px 14px;border:1.5px solid #6366f1;border-radius:8px;background:rgba(99,102,241,0.06)}
+.demo-convert .fmt1,.demo-convert .fmt2{font-family:var(--font-mono);font-size:15px;font-weight:800;color:#6366f1;padding:10px 16px;border:2px solid #6366f1;border-radius:9px;background:rgba(99,102,241,0.06)}
 .demo-convert .fmt1{animation:dfmt1 3s ease-in-out infinite}
 .demo-convert .fmt2{animation:dfmt2 3s ease-in-out infinite}
 .demo-convert .fmtArr{color:#6366f1;font-size:20px;animation:dfmtArr 3s ease-in-out infinite}
@@ -125,8 +127,8 @@
 @keyframes dfmtArr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(180deg)}}
 
 /* --- Resize: crop frame scaling --- */
-.demo-resize .cropFrame{width:130px;height:90px;border:2px dashed #a855f7;border-radius:2px;animation:dcropFrame 3s ease-in-out infinite}
-.demo-resize .cropCorner{width:10px;height:10px;border:2px solid #a855f7;border-radius:2px;background:rgba(168,85,247,0.15)}
+.demo-resize .cropFrame{width:150px;height:100px;border:2.5px dashed #a855f7;border-radius:2px;animation:dcropFrame 3s ease-in-out infinite}
+.demo-resize .cropCorner{width:12px;height:12px;border:2.5px solid #a855f7;border-radius:2px;background:rgba(168,85,247,0.15)}
 .demo-resize .cropCorner.tl{top:0;left:0;animation:dcropTL 3s ease-in-out infinite}
 .demo-resize .cropCorner.br{bottom:0;right:0;animation:dcropBR 3s ease-in-out infinite}
 @keyframes dcropFrame{0%,100%{transform:scale(1)}50%{transform:scale(0.65)}}
@@ -134,14 +136,14 @@
 @keyframes dcropBR{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,-15px)}}
 
 /* --- Watermark: text overlay on image placeholder --- */
-.demo-watermark .wmImg{width:140px;height:90px;border:2px solid #f43f5e;border-radius:8px;background:rgba(244,63,94,0.04);animation:dwmImg 3s ease-in-out infinite}
-.demo-watermark .wmTxt{color:#f43f5e;font-size:14px;font-weight:700;letter-spacing:2px;opacity:0;transform:rotate(-20deg);animation:dwmTxt 3s ease-in-out infinite}
+.demo-watermark .wmImg{width:160px;height:100px;border:2.5px solid #f43f5e;border-radius:9px;background:rgba(244,63,94,0.04);animation:dwmImg 3s ease-in-out infinite}
+.demo-watermark .wmTxt{color:#f43f5e;font-size:18px;font-weight:800;letter-spacing:3px;opacity:0;transform:rotate(-20deg);animation:dwmTxt 3s ease-in-out infinite}
 @keyframes dwmImg{0%,100%{opacity:0.3}50%{opacity:0.8}}
 @keyframes dwmTxt{0%,100%{opacity:0;transform:rotate(-20deg) scale(0.8)}50%{opacity:1;transform:rotate(-20deg) scale(1.1)}}
 
 /* --- Img2Base64: scrolling code characters --- */
 .demo-imgbase64{flex-direction:column;gap:3px}
-.demo-imgbase64 .b64line{height:3px;background:#14b8a6;border-radius:2px;animation:db64line 2s linear infinite}
+.demo-imgbase64 .b64line{height:4px;background:#14b8a6;border-radius:2px;animation:db64line 2s linear infinite}
 .demo-imgbase64 .b64line:nth-child(1){width:70%;animation-delay:0s}
 .demo-imgbase64 .b64line:nth-child(2){width:85%;animation-delay:0.3s}
 .demo-imgbase64 .b64line:nth-child(3){width:60%;animation-delay:0.6s}
@@ -150,7 +152,7 @@
 @keyframes db64line{0%{transform:translateX(-100%);opacity:0}50%{opacity:1}100%{transform:translateX(100%);opacity:0}}
 
 /* --- Palette: floating color circles --- */
-.demo-palette .palDot{width:18px;height:18px;border-radius:50%;animation:dpadot 4s ease-in-out infinite}
+.demo-palette .palDot{width:22px;height:22px;border-radius:50%;animation:dpadot 4s ease-in-out infinite}
 .demo-palette .palDot:nth-child(1){background:#ef4444;animation-delay:0s}
 .demo-palette .palDot:nth-child(2){background:#f59e0b;animation-delay:-0.6s}
 .demo-palette .palDot:nth-child(3){background:#10b981;animation-delay:-1.2s}
@@ -159,7 +161,7 @@
 @keyframes dpadot{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-20px) scale(1.5)}50%{transform:translate(-20px,25px) scale(0.8)}75%{transform:translate(-30px,-15px) scale(1.3)}}
 
 /* --- JSON: indentation lines expanding --- */
-.demo-json .jsonLine{height:2.5px;background:#10b981;border-radius:2px;position:absolute;animation:djson 2.5s ease-in-out infinite}
+.demo-json .jsonLine{height:3.5px;background:#10b981;border-radius:2px;position:absolute;animation:djson 2.5s ease-in-out infinite}
 .demo-json .jsonLine:nth-child(1){width:50px;top:40%;left:25%;animation-delay:0s}
 .demo-json .jsonLine:nth-child(2){width:70px;top:50%;left:25%;animation-delay:0.2s}
 .demo-json .jsonLine:nth-child(3){width:60px;top:60%;left:25%;animation-delay:0.4s}
@@ -167,7 +169,7 @@
 @keyframes djson{0%,100%{transform:translateX(0);opacity:0.4}50%{transform:translateX(20px);opacity:1}}
 
 /* --- Base64: character shifting --- */
-.demo-base64{font-family:var(--font-mono);font-size:11px;color:#06b6d4;letter-spacing:3px;flex-direction:row;gap:0}
+.demo-base64{font-family:var(--font-mono);font-size:14px;color:#06b6d4;letter-spacing:4px;font-weight:700flex-direction:row;gap:0}
 .demo-base64 span{animation:db64char 3s steps(1) infinite}
 .demo-base64 span:nth-child(1){animation-delay:0s}
 .demo-base64 span:nth-child(2){animation-delay:0.3s}
@@ -178,32 +180,32 @@
 @keyframes db64char{0%,20%{content:"A"}21%,40%{content:"Z"}41%,60%{content:"9"}61%,80%{content:"+"}81%,100%{content:"="}}
 
 /* --- URL: percent encoding --- */
-.demo-url .urlPct{font-family:var(--font-mono);font-size:16px;font-weight:700;color:#3b82f6;opacity:0;animation:durl 2.5s ease-in-out infinite}
+.demo-url .urlPct{font-family:var(--font-mono);font-size:20px;font-weight:800;color:#3b82f6;opacity:0;animation:durl 2.5s ease-in-out infinite}
 .demo-url .urlPct:nth-child(1){animation-delay:0s}
 .demo-url .urlPct:nth-child(2){animation-delay:0.5s}
 .demo-url .urlPct:nth-child(3){animation-delay:1s}
 @keyframes durl{0%,100%{opacity:0;transform:translateY(10px)}20%{opacity:1;transform:translateY(0)}40%{opacity:0;transform:translateY(-10px)}}
 
 /* --- Timestamp: clock with rotating hand --- */
-.demo-timestamp .tsClock{width:70px;height:70px;border:2px solid #6366f1;border-radius:50%;position:relative}
-.demo-timestamp .tsHand{position:absolute;width:2px;height:22px;background:#6366f1;bottom:50%;left:50%;transform-origin:bottom center;border-radius:1px;animation:dtsHand 4s linear infinite}
+.demo-timestamp .tsClock{width:80px;height:80px;border:2.5px solid #6366f1;border-radius:50%;position:relative}
+.demo-timestamp .tsHand{position:absolute;width:2.5px;height:26px;background:#6366f1;bottom:50%;left:50%;transform-origin:bottom center;border-radius:1px;animation:dtsHand 4s linear infinite}
 .demo-timestamp .tsDot{position:absolute;width:6px;height:6px;background:#6366f1;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
 @keyframes dtsHand{0%{transform:translate(-50%,0) rotate(0deg)}100%{transform:translate(-50%,0) rotate(360deg)}}
 
 /* --- Markdown: typing cursor + text markdown symbols --- */
-.demo-markdown .mdChars{font-family:var(--font-mono);font-size:14px;color:#a855f7;letter-spacing:1px}
+.demo-markdown .mdChars{font-family:var(--font-mono);font-size:16px;color:#a855f7;letter-spacing:1px;font-weight:700
 .demo-markdown .mdCursor{width:2px;height:16px;background:#a855f7;animation:dmdCursor 0.8s step-end infinite}
-.demo-markdown .mdHash{font-size:20px;font-weight:800;color:#a855f7;animation:dmdHash 2s ease-in-out infinite}
+.demo-markdown .mdHash{font-size:26px;font-weight:800;color:#a855f7;animation:dmdHash 2s ease-in-out infinite}
 @keyframes dmdCursor{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes dmdHash{0%,100%{opacity:0.3;transform:translateY(3px)}50%{opacity:1;transform:translateY(0)}}
 
 /* --- Domain: globe with scanning rings --- */
-.demo-domain .domGlobe{width:60px;height:60px;border:2px solid #f59e0b;border-radius:50%;animation:ddomGlobe 3s ease-in-out infinite}
-.demo-domain .domRing{position:absolute;border:1.5px solid #f59e0b;border-radius:50%;animation:ddomRing 2.5s ease-out infinite}
+.demo-domain .domGlobe{width:75px;height:75px;border:2.5px solid #f59e0b;border-radius:50%;animation:ddomGlobe 3s ease-in-out infinite}
+.demo-domain .domRing{position:absolute;border:2px solid #f59e0b;border-radius:50%;animation:ddomRing 2.5s ease-out infinite}
 .demo-domain .domRing:nth-child(2){animation-delay:0.8s}
 .demo-domain .domRing:nth-child(3){animation-delay:1.6s}
 @keyframes ddomGlobe{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.08);opacity:1}}
-@keyframes ddomRing{0%{width:60px;height:60px;opacity:0.8}100%{width:140px;height:140px;opacity:0}}
+@keyframes ddomRing{0%{width:75px;height:75px;opacity:0.8}100%{width:160px;height:160px;opacity:0}}
 
 @media(max-width:768px){
   .grid{grid-template-columns:1fr}

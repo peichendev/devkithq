@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to Base64 — DevKit HQ</title>
+<meta name="description" content="Encode images to Base64 text. Browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .b64-wrap{max-width:640px;margin:0 auto}
+  .b64-preview{margin-top:20px;text-align:center}
+  .b64-preview img{max-width:100%;max-height:280px;border-radius:var(--radius);border:1px solid var(--border)}
+  .b64-output{margin-top:16px}
+  .b64-output label{display:flex;justify-content:space-between;align-items:center}
+  .b64-info{display:flex;gap:16px;align-items:center;font-size:var(--fs-sm);color:var(--text-secondary);margin-top:8px}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+
+<main class="container page">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>📝 图片转 Base64</h1>
+    <p>将图片编码为 Base64 文本，可直接嵌入 HTML/CSS</p>
+  </div>
+
+  <div class="b64-wrap">
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <div class="dropzone-title">拖拽或点击上传图片</div>
+      <div class="dropzone-sub">支持 JPEG / PNG / WebP / GIF / SVG · 最大 10MB</div>
+      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+
+    <div id="resultArea" style="display:none">
+      <div class="b64-preview"><img id="preview" alt="Preview"></div>
+      <div class="b64-info"><span>格式: <strong id="imgFmt">-</strong></span><span>原始大小: <strong id="imgSize">-</strong></span></div>
+      <div class="b64-output">
+        <label><strong>Base64 数据 <span style="font-weight:400;color:var(--text-tertiary)">(点击下方复制)</span></strong></label>
+        <textarea class="input input-mono" id="b64Text" rows="6" readonly style="cursor:pointer;font-size:var(--fs-xs);word-break:break-all" onclick="this.select();copyToClipboard(this.value)"></textarea>
+      </div>
+      <div class="b64-output mt">
+        <label><strong>HTML &lt;img&gt; 标签</strong></label>
+        <textarea class="input input-mono" id="htmlTag" rows="2" readonly style="cursor:pointer;font-size:var(--fs-xs)" onclick="this.select();copyToClipboard(this.value)"></textarea>
+      </div>
+      <div class="b64-output mt">
+        <label><strong>CSS background-image</strong></label>
+        <textarea class="input input-mono" id="cssBg" rows="2" readonly style="cursor:pointer;font-size:var(--fs-xs)" onclick="this.select();copyToClipboard(this.value)"></textarea>
+      </div>
+      <div class="flex gap-sm mt-md justify-between">
+        <button class="btn btn-ghost btn-sm" id="resetBtn">重新选择</button>
+        <button class="btn btn-primary" id="copyBtn">📋 复制 Base64</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => { renderNav('image'); applyI18n(); });
+
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+const resultArea = document.getElementById('resultArea');
+
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+document.getElementById('uploadBtn').addEventListener('click', () => fi.click());
+fi.addEventListener('change', e => { if (e.target.files[0]) { loadFile(e.target.files[0]); fi.value = ''; } });
+
+function loadFile(file) {
+  if (!file.type.startsWith('image/')) { toast('请选择图片文件'); return; }
+  if (file.size > 10*1024*1024) { toast('文件最大 10MB'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const b64 = reader.result;
+    document.getElementById('preview').src = b64;
+    document.getElementById('imgFmt').textContent = file.type;
+    document.getElementById('imgSize').textContent = formatBytes(file.size);
+    document.getElementById('b64Text').value = b64;
+    const ext = file.type.split('/')[1] || 'png';
+    document.getElementById('htmlTag').value = `<img src="${b64}" alt="">`;
+    document.getElementById('cssBg').value = `background-image: url("${b64}");`;
+    resultArea.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+document.getElementById('resetBtn').addEventListener('click', () => { resultArea.style.display = 'none'; });
+document.getElementById('copyBtn').addEventListener('click', () => copyToClipboard(document.getElementById('b64Text').value));
+</script>
+</body>
+</html>

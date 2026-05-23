@@ -1,0 +1,27 @@
+{
+  "rewrites": [
+    { "source": "/api/domain-lookup", "destination": "/api/domain-lookup.js" }
+  ],
+  "redirects": [
+    { "source": "/compress", "destination": "/tools/compress.html", "permanent": true },
+    { "source": "/convert", "destination": "/tools/convert.html", "permanent": true },
+    { "source": "/resize", "destination": "/tools/resize.html", "permanent": true },
+    { "source": "/watermark", "destination": "/tools/watermark.html", "permanent": true },
+    { "source": "/img-base64", "destination": "/tools/img-base64.html", "permanent": true },
+    { "source": "/palette", "destination": "/tools/palette.html", "permanent": true },
+    { "source": "/json", "destination": "/tools/json-formatter.html", "permanent": true },
+    { "source": "/base64", "destination": "/tools/base64-codec.html", "permanent": true },
+    { "source": "/url", "destination": "/tools/url-codec.html", "permanent": true },
+    { "source": "/timestamp", "destination": "/tools/timestamp.html", "permanent": true },
+    { "source": "/markdown", "destination": "/tools/markdown.html", "permanent": true },
+    { "source": "/domain", "destination": "/tools/domain-lookup.html", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Resize & Crop — DevKit HQ</title>
+<meta name="description" content="Free online image crop and resize tool. Visual canvas editor with aspect ratio lock and preset sizes. Browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .rz-wrap{max-width:760px;margin:0 auto}
+  .canvas-wrap{position:relative;margin:0 auto;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect width="8" height="8" fill="%23111"/><rect x="8" y="8" width="8" height="8" fill="%23111"/></svg>') repeat;background-size:16px 16px}
+  .canvas-wrap canvas{display:block;max-width:100%;height:auto;cursor:crosshair}
+  .rz-hidden{display:none !important}
+
+  .rz-controls{margin-top:20px}
+  .rz-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .rz-row label{font-size:var(--fs-xs);font-weight:600;color:var(--text-secondary);margin-right:4px;white-space:nowrap}
+  .rz-pill{display:inline-flex;padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);font-size:var(--fs-xs);font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all var(--dur) var(--ease);white-space:nowrap}
+  .rz-pill:hover{border-color:var(--border-hover);color:var(--text)}
+  .rz-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .rz-dim{display:flex;align-items:center;gap:6px}
+  .rz-dim input{width:80px;padding:6px 8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:var(--fs-sm);font-family:var(--font-mono);text-align:center;transition:all var(--dur) var(--ease)}
+  .rz-dim input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+  .rz-dim span{color:var(--text-tertiary);font-size:var(--fs-sm)}
+  .rz-swap{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-secondary);transition:all var(--dur) var(--ease)}
+  .rz-swap:hover{border-color:var(--border-hover);color:var(--text)}
+
+  .rz-preview-wrap{margin-top:24px}
+  .rz-preview-wrap h3{font-size:var(--fs-sm);font-weight:600;margin-bottom:8px;color:var(--text-secondary)}
+  .rz-preview-inner{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)}
+  .rz-preview-canvas{border:1px solid var(--border);border-radius:var(--radius-sm);max-width:220px;max-height:220px;object-fit:contain;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><rect width="6" height="6" fill="%23111"/><rect x="6" y="6" width="6" height="6" fill="%23111"/></svg>') repeat;background-size:12px 12px}
+  .rz-preview-info{font-size:var(--fs-xs);color:var(--text-secondary)}
+  .rz-preview-info strong{color:var(--text);font-family:var(--font-mono)}
+  @media(max-width:640px){
+    .rz-row{gap:6px}
+    .rz-dim input{width:64px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container page">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>✂️ 裁剪缩放</h1>
+    <p>可视化裁剪图片，支持锁定比例与预设尺寸</p>
+  </div>
+
+  <div class="rz-wrap">
+    <!-- Dropzone -->
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M22 6l-4 4-3-3-4 4-3-3-4 4"/></svg>
+      </div>
+      <div class="dropzone-title">拖拽或点击上传图片</div>
+      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+    </div>
+
+    <!-- Editor (shown after upload) -->
+    <div id="editorArea" class="rz-hidden">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="canvas"></canvas>
+      </div>
+
+      <div class="rz-controls">
+        <!-- Aspect ratio pills -->
+        <div class="rz-row">
+          <label>比例：</label>
+          <button class="rz-pill active" data-ratio="">自由</button>
+          <button class="rz-pill" data-ratio="1:1">1:1</button>
+          <button class="rz-pill" data-ratio="4:3">4:3</button>
+          <button class="rz-pill" data-ratio="16:9">16:9</button>
+          <button class="rz-pill" data-ratio="3:2">3:2</button>
+        </div>
+
+        <!-- Dimensions -->
+        <div class="rz-row">
+          <label>尺寸：</label>
+          <div class="rz-dim">
+            <input type="number" id="cropW" min="1" placeholder="W">
+            <span>×</span>
+            <input type="number" id="cropH" min="1" placeholder="H">
+            <button class="rz-swap" id="swapBtn" title="交换宽高">⇄</button>
+          </div>
+          <span style="color:var(--text-tertiary);font-size:var(--fs-xs)">px</span>
+        </div>
+
+        <!-- Presets -->
+        <div class="rz-row">
+          <label>预设：</label>
+          <button class="rz-pill" data-preset="1920,1080">1920×1080</button>
+          <button class="rz-pill" data-preset="1280,720">1280×720</button>
+          <button class="rz-pill" data-preset="800,800">800×800</button>
+          <button class="rz-pill" data-preset="400,400">400×400</button>
+          <button class="rz-pill" data-preset="200,200">200×200</button>
+        </div>
+
+        <!-- Actions -->
+        <div class="rz-row" style="justify-content:space-between">
+          <button class="btn btn-ghost btn-sm" id="resetCropBtn">重置选区</button>
+          <div class="flex gap-sm">
+            <button class="btn btn-secondary btn-sm" id="newImageBtn">重新选择</button>
+            <button class="btn btn-primary" id="downloadBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              下载裁剪结果
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="rz-preview-wrap">
+        <h3>预览</h3>
+        <div class="rz-preview-inner">
+          <canvas class="rz-preview-canvas" id="previewCanvas"></canvas>
+          <div class="rz-preview-info">
+            <div>裁剪区域：<strong id="previewDim">-</strong></div>
+            <div>原始尺寸：<strong id="previewOrig">-</strong></div>
+            <div style="margin-top:4px;color:var(--text-tertiary)">拖拽选区四角或边缘调整</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => { renderNav('image'); applyI18n(); });
+
+// ===== State =====
+let image = null;
+let origFileName = 'image.png';
+let displayW = 0, displayH = 0;
+let crop = { x: 0, y: 0, w: 0, h: 0 };
+let aspectRatio = null; // null = free, or number (w/h)
+let dragging = null; // null | 'move' | 'nw'|'n'|'ne'|'e'|'se'|'s'|'sw'|'w'
+let dragAnchor = { x: 0, y: 0, cropX: 0, cropY: 0, cropW: 0, cropH: 0 };
+const HANDLE_SIZE = 8;
+const MIN_CROP_PX = 10;
+
+// ===== DOM refs =====
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+const editorArea = document.getElementById('editorArea');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const previewCanvas = document.getElementById('previewCanvas');
+const pctx = previewCanvas.getContext('2d');
+
+// ===== Upload =====
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0]); });
+document.getElementById('uploadBtn').addEventListener('click', () => fi.click());
+fi.addEventListener('change', e => { if (e.target.files[0]) { loadImage(e.target.files[0]); fi.value = ''; } });
+
+function loadImage(file) {
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  origFileName = file.name;
+  const img = new Image();
+  img.onload = () => {
+    image = img;
+    setupCanvas();
+    dz.classList.add('rz-hidden');
+    editorArea.classList.remove('rz-hidden');
+    updateDimInputs();
+    updatePreview();
+    render();
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+function setupCanvas() {
+  const maxW = 700, maxH = 440;
+  let dw = image.naturalWidth, dh = image.naturalHeight;
+  if (dw > maxW || dh > maxH) {
+    const s = Math.min(maxW / dw, maxH / dh);
+    dw = Math.round(dw * s);
+    dh = Math.round(dh * s);
+  }
+  displayW = dw;
+  displayH = dh;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = dw * dpr;
+  canvas.height = dh * dpr;
+  canvas.style.width = dw + 'px';
+  canvas.style.height = dh + 'px';
+  crop = { x: 0, y: 0, w: image.naturalWidth, h: image.naturalHeight };
+}
+
+// ===== Coordinate conversion =====
+function canvasToImage(cx, cy) {
+  return {
+    x: (cx / displayW) * image.naturalWidth,
+    y: (cy / displayH) * image.naturalHeight
+  };
+}
+function imageToCanvas(ix, iy) {
+  return {
+    x: (ix / image.naturalWidth) * displayW,
+    y: (iy / image.naturalHeight) * displayH
+  };
+}
+
+// ===== Handles =====
+function getHandles() {
+  const c = imageToCanvas(crop.x, crop.y);
+  const cw = (crop.w / image.naturalWidth) * displayW;
+  const ch = (crop.h / image.naturalHeight) * displayH;
+  const cx = c.x, cy = c.y;
+  return {
+    nw: { x: cx,       y: cy },
+    n:  { x: cx + cw/2, y: cy },
+    ne: { x: cx + cw,  y: cy },
+    e:  { x: cx + cw,  y: cy + ch/2 },
+    se: { x: cx + cw,  y: cy + ch },
+    s:  { x: cx + cw/2, y: cy + ch },
+    sw: { x: cx,       y: cy + ch },
+    w:  { x: cx,       y: cy + ch/2 },
+  };
+}
+
+function hitHandle(mx, my) {
+  const handles = getHandles();
+  const hs = HANDLE_SIZE + 2;
+  for (const [name, h] of Object.entries(handles)) {
+    if (Math.abs(mx - h.x) <= hs && Math.abs(my - h.y) <= hs) return name;
+  }
+  return null;
+}
+
+function cursorForHandle(h) {
+  const map = { nw:'nwse-resize', se:'nwse-resize', ne:'nesw-resize', sw:'nesw-resize',
+                n:'ns-resize', s:'ns-resize', e:'ew-resize', w:'ew-resize' };
+  return map[h] || 'default';
+}
+
+// ===== Rendering =====
+function render() {
+  const cw = canvas.width, ch = canvas.height;
+  ctx.clearRect(0, 0, cw, ch);
+
+  // Image
+  const sx = cw / image.naturalWidth;
+  const sy = ch / image.naturalHeight;
+  ctx.setTransform(sx, 0, 0, sy, 0, 0);
+  ctx.drawImage(image, 0, 0);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Dim overlay
+  const cx = crop.x * sx, cy = crop.y * sy;
+  const cww = crop.w * sx, chh = crop.h * sy;
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  // top
+  if (cy > 0) ctx.fillRect(0, 0, cw, cy);
+  // bottom
+  const botY = cy + chh;
+  if (botY < ch) ctx.fillRect(0, botY, cw, ch - botY);
+  // left
+  if (cx > 0) ctx.fillRect(0, cy, cx, chh);
+  // right
+  const rightX = cx + cww;
+  if (rightX < cw) ctx.fillRect(rightX, cy, cw - rightX, chh);
+
+  // Crop border
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 3]);
+  ctx.strokeRect(cx, cy, cww, chh);
+  ctx.setLineDash([]);
+
+  // Rule-of-thirds guides (subtle)
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 0.5;
+  for (let i = 1; i < 3; i++) {
+    const gx = cx + (cww / 3) * i;
+    const gy = cy + (chh / 3) * i;
+    ctx.beginPath(); ctx.moveTo(gx, cy); ctx.lineTo(gx, cy + chh); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, gy); ctx.lineTo(cx + cww, gy); ctx.stroke();
+  }
+
+  // Handles
+  const hs = HANDLE_SIZE;
+  const handles = [
+    { x: cx,       y: cy },        // nw
+    { x: cx + cww/2, y: cy },       // n
+    { x: cx + cww, y: cy },        // ne
+    { x: cx + cww, y: cy + chh/2 }, // e
+    { x: cx + cww, y: cy + chh },  // se
+    { x: cx + cww/2, y: cy + chh }, // s
+    { x: cx,       y: cy + chh },  // sw
+    { x: cx,       y: cy + chh/2 }, // w
+  ];
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+  ctx.lineWidth = 1;
+  for (const h of handles) {
+    ctx.fillRect(h.x - hs/2, h.y - hs/2, hs, hs);
+    ctx.strokeRect(h.x - hs/2, h.y - hs/2, hs, hs);
+  }
+}
+
+function updatePreview() {
+  const previewCrop = { ...crop };
+  // Clamp negative
+  if (previewCrop.x < 0) { previewCrop.w += previewCrop.x; previewCrop.x = 0; }
+  if (previewCrop.y < 0) { previewCrop.h += previewCrop.y; previewCrop.y = 0; }
+  if (previewCrop.w < 1) previewCrop.w = 1;
+  if (previewCrop.h < 1) previewCrop.h = 1;
+
+  const maxPrev = 200;
+  let pw = previewCrop.w, ph = previewCrop.h;
+  if (pw > maxPrev || ph > maxPrev) {
+    const s = Math.min(maxPrev / pw, maxPrev / ph);
+    pw = Math.round(pw * s);
+    ph = Math.round(ph * s);
+  }
+  if (pw < 2) pw = 2; if (ph < 2) ph = 2;
+  previewCanvas.width = pw;
+  previewCanvas.height = ph;
+  previewCanvas.style.width = pw + 'px';
+  previewCanvas.style.height = ph + 'px';
+  pctx.drawImage(image, previewCrop.x, previewCrop.y, previewCrop.w, previewCrop.h, 0, 0, pw, ph);
+
+  document.getElementById('previewDim').textContent = `${Math.round(crop.w)} × ${Math.round(crop.h)} px`;
+  document.getElementById('previewOrig').textContent = `${image.naturalWidth} × ${image.naturalHeight} px`;
+}
+
+// ===== Input sync =====
+function updateDimInputs() {
+  document.getElementById('cropW').value = Math.round(crop.w);
+  document.getElementById('cropH').value = Math.round(crop.h);
+}
+
+function clampCrop() {
+  if (crop.w < MIN_CROP_PX) crop.w = MIN_CROP_PX;
+  if (crop.h < MIN_CROP_PX) crop.h = MIN_CROP_PX;
+  if (crop.x < 0) crop.x = 0;
+  if (crop.y < 0) crop.y = 0;
+  if (crop.x + crop.w > image.naturalWidth) crop.x = image.naturalWidth - crop.w;
+  if (crop.y + crop.h > image.naturalHeight) crop.y = image.naturalHeight - crop.h;
+}
+
+// ===== Mouse events =====
+canvas.addEventListener('mousedown', e => {
+  if (!image || dragging) return;
+  const mx = e.offsetX, my = e.offsetY;
+  const handle = hitHandle(mx, my);
+
+  if (handle) {
+    dragging = handle;
+    canvas.style.cursor = cursorForHandle(handle);
+  } else {
+    // Check if inside crop rect
+    const pt = canvasToImage(mx, my);
+    if (pt.x >= crop.x && pt.x <= crop.x + crop.w && pt.y >= crop.y && pt.y <= crop.y + crop.h) {
+      dragging = 'move';
+      canvas.style.cursor = 'move';
+    } else {
+      // Start a new crop rect from scratch
+      dragging = 'new';
+      canvas.style.cursor = 'crosshair';
+    }
+  }
+
+  if (dragging) {
+    dragAnchor = { x: mx, y: my, cropX: crop.x, cropY: crop.y, cropW: crop.w, cropH: crop.h };
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const mx = e.offsetX, my = e.offsetY;
+
+  if (dragging) {
+    const dx = mx - dragAnchor.x;
+    const dy = my - dragAnchor.y;
+    const dxi = (dx / displayW) * image.naturalWidth;
+    const dyi = (dy / displayH) * image.naturalHeight;
+
+    if (dragging === 'move') {
+      crop.x = dragAnchor.cropX + dxi;
+      crop.y = dragAnchor.cropY + dyi;
+    } else if (dragging === 'new') {
+      // Drag to define rectangle
+      const pt1 = canvasToImage(dragAnchor.x, dragAnchor.y);
+      const pt2 = canvasToImage(mx, my);
+      crop.x = Math.min(pt1.x, pt2.x);
+      crop.y = Math.min(pt1.y, pt2.y);
+      crop.w = Math.abs(pt2.x - pt1.x);
+      crop.h = Math.abs(pt2.y - pt1.y);
+      if (aspectRatio && crop.w > MIN_CROP_PX) crop.h = crop.w / aspectRatio;
+    } else if (dragging === 'nw') {
+      crop.x = dragAnchor.cropX + dxi;
+      crop.y = dragAnchor.cropY + dyi;
+      crop.w = dragAnchor.cropW - dxi;
+      crop.h = dragAnchor.cropH - dyi;
+      if (aspectRatio) {
+        crop.w = Math.max(Math.abs(crop.w), Math.abs(crop.h) * aspectRatio);
+        crop.h = crop.w / aspectRatio;
+        if (dxi > 0) crop.x = dragAnchor.cropX + dragAnchor.cropW - crop.w;
+        if (dyi > 0) crop.y = dragAnchor.cropY + dragAnchor.cropH - crop.h;
+      }
+    } else if (dragging === 'ne') {
+      crop.y = dragAnchor.cropY + dyi;
+      crop.w = dragAnchor.cropW + dxi;
+      crop.h = dragAnchor.cropH - dyi;
+      if (aspectRatio) { crop.w = Math.max(Math.abs(crop.w), Math.abs(crop.h) * aspectRatio); crop.h = crop.w / aspectRatio; if (dyi > 0) crop.y = dragAnchor.cropY + dragAnchor.cropH - crop.h; }
+    } else if (dragging === 'se') {
+      crop.w = dragAnchor.cropW + dxi;
+      crop.h = dragAnchor.cropH + dyi;
+      if (aspectRatio) { crop.w = Math.max(Math.abs(crop.w), Math.abs(crop.h) * aspectRatio); crop.h = crop.w / aspectRatio; }
+    } else if (dragging === 'sw') {
+      crop.x = dragAnchor.cropX + dxi;
+      crop.w = dragAnchor.cropW - dxi;
+      crop.h = dragAnchor.cropH + dyi;
+      if (aspectRatio) { crop.w = Math.max(Math.abs(crop.w), Math.abs(crop.h) * aspectRatio); crop.h = crop.w / aspectRatio; if (dxi > 0) crop.x = dragAnchor.cropX + dragAnchor.cropW - crop.w; }
+    } else if (dragging === 'n') {
+      crop.y = dragAnchor.cropY + dyi;
+      crop.h = dragAnchor.cropH - dyi;
+      if (aspectRatio) { crop.w = crop.h * aspectRatio; if (crop.w > image.naturalWidth) { crop.w = image.naturalWidth; crop.h = crop.w / aspectRatio; } }
+    } else if (dragging === 's') {
+      crop.h = dragAnchor.cropH + dyi;
+      if (aspectRatio) { crop.w = crop.h * aspectRatio; if (crop.w > image.naturalWidth) { crop.w = image.naturalWidth; crop.h = crop.w / aspectRatio; } }
+    } else if (dragging === 'e') {
+      crop.w = dragAnchor.cropW + dxi;
+      if (aspectRatio) { crop.h = crop.w / aspectRatio; if (crop.h > image.naturalHeight) { crop.h = image.naturalHeight; crop.w = crop.h * aspectRatio; } }
+    } else if (dragging === 'w') {
+      crop.x = dragAnchor.cropX + dxi;
+      crop.w = dragAnchor.cropW - dxi;
+      if (aspectRatio) { crop.h = crop.w / aspectRatio; if (crop.h > image.naturalHeight) { crop.h = image.naturalHeight; crop.w = crop.h * aspectRatio; } if (dxi > 0) crop.x = dragAnchor.cropX + dragAnchor.cropW - crop.w; }
+    }
+
+    // Handle negative dimensions (for corner drags)
+    if (crop.w < 0 && (dragging === 'nw' || dragging === 'sw')) { crop.x += crop.w; crop.w = -crop.w; }
+    if (crop.w < 0 && (dragging === 'ne' || dragging === 'se')) { crop.w = -crop.w; }
+    if (crop.h < 0 && (dragging === 'nw' || dragging === 'ne')) { crop.y += crop.h; crop.h = -crop.h; }
+    if (crop.h < 0 && (dragging === 'sw' || dragging === 'se')) { crop.h = -crop.h; }
+
+    clampCrop();
+    updateDimInputs();
+    updatePreview();
+    render();
+    return;
+  }
+
+  // Hover cursor
+  if (image) {
+    const handle = hitHandle(mx, my);
+    if (handle) { canvas.style.cursor = cursorForHandle(handle); return; }
+    const pt = canvasToImage(mx, my);
+    if (pt.x >= crop.x && pt.x <= crop.x + crop.w && pt.y >= crop.y && pt.y <= crop.y + crop.h) {
+      canvas.style.cursor = 'move'; return;
+    }
+  }
+  canvas.style.cursor = 'crosshair';
+});
+
+canvas.addEventListener('mouseup', () => { dragging = null; });
+canvas.addEventListener('mouseleave', () => { if (!dragging) canvas.style.cursor = 'crosshair'; });
+
+// Touch support
+canvas.addEventListener('touchstart', e => {
+  if (!image || dragging) return;
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.touches[0].clientX - rect.left;
+  const my = e.touches[0].clientY - rect.top;
+  const handle = hitHandle(mx, my);
+  if (handle) { dragging = handle; }
+  else {
+    const pt = canvasToImage(mx, my);
+    if (pt.x >= crop.x && pt.x <= crop.x + crop.w && pt.y >= crop.y && pt.y <= crop.y + crop.h) dragging = 'move';
+  }
+  if (dragging) dragAnchor = { x: mx, y: my, cropX: crop.x, cropY: crop.y, cropW: crop.w, cropH: crop.h };
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.touches[0].clientX - rect.left;
+  const my = e.touches[0].clientY - rect.top;
+  // Fake a mousemove — reuse the same logic via dispatch, or just inline
+  const fakeE = { offsetX: mx, offsetY: my };
+  canvas.dispatchEvent(new MouseEvent('mousemove', fakeE));
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { dragging = null; });
+
+// ===== Aspect ratio buttons =====
+document.querySelectorAll('[data-ratio]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-ratio]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const val = btn.dataset.ratio;
+    if (!val) { aspectRatio = null; return; }
+    const [w, h] = val.split(':').map(Number);
+    aspectRatio = w / h;
+    // Enforce ratio on current crop (from center)
+    if (image) {
+      const cx = crop.x + crop.w / 2;
+      const cy = crop.y + crop.h / 2;
+      crop.w = Math.min(crop.w, image.naturalWidth);
+      crop.h = crop.w / aspectRatio;
+      if (crop.h > image.naturalHeight) { crop.h = image.naturalHeight; crop.w = crop.h * aspectRatio; }
+      crop.x = cx - crop.w / 2;
+      crop.y = cy - crop.h / 2;
+      clampCrop();
+      updateDimInputs();
+      updatePreview();
+      render();
+    }
+  });
+});
+
+// ===== Dimension inputs =====
+const cropWInput = document.getElementById('cropW');
+const cropHInput = document.getElementById('cropH');
+
+function onWInput() {
+  if (!image) return;
+  let w = parseInt(cropWInput.value) || crop.w;
+  if (w < MIN_CROP_PX) w = MIN_CROP_PX;
+  if (w > image.naturalWidth) w = image.naturalWidth;
+  crop.w = w;
+  if (aspectRatio) crop.h = w / aspectRatio;
+  clampCrop();
+  updateDimInputs();
+  updatePreview();
+  render();
+}
+function onHInput() {
+  if (!image) return;
+  let h = parseInt(cropHInput.value) || crop.h;
+  if (h < MIN_CROP_PX) h = MIN_CROP_PX;
+  if (h > image.naturalHeight) h = image.naturalHeight;
+  crop.h = h;
+  if (aspectRatio) crop.w = h * aspectRatio;
+  clampCrop();
+  updateDimInputs();
+  updatePreview();
+  render();
+}
+cropWInput.addEventListener('input', onWInput);
+cropHInput.addEventListener('input', onHInput);
+cropWInput.addEventListener('change', onWInput);
+cropHInput.addEventListener('change', onHInput);
+
+document.getElementById('swapBtn').addEventListener('click', () => {
+  if (!image) return;
+  const tmp = crop.w;
+  crop.w = crop.h;
+  crop.h = tmp;
+  if (aspectRatio) aspectRatio = 1 / aspectRatio;
+  clampCrop();
+  updateDimInputs();
+  updatePreview();
+  render();
+});
+
+// ===== Preset buttons =====
+document.querySelectorAll('[data-preset]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!image) return;
+    const [pw, ph] = btn.dataset.preset.split(',').map(Number);
+    const cx = crop.x + crop.w / 2;
+    const cy = crop.y + crop.h / 2;
+    crop.w = Math.min(pw, image.naturalWidth);
+    crop.h = Math.min(ph, image.naturalHeight);
+    const scale = Math.min(crop.w / pw, crop.h / ph);
+    crop.w = Math.round(pw * scale);
+    crop.h = Math.round(ph * scale);
+    crop.x = cx - crop.w / 2;
+    crop.y = cy - crop.h / 2;
+    if (aspectRatio) crop.h = crop.w / aspectRatio;
+    clampCrop();
+    updateDimInputs();
+    updatePreview();
+    render();
+  });
+});
+
+// ===== Reset =====
+document.getElementById('resetCropBtn').addEventListener('click', () => {
+  if (!image) return;
+  crop = { x: 0, y: 0, w: image.naturalWidth, h: image.naturalHeight };
+  updateDimInputs();
+  updatePreview();
+  render();
+});
+
+// ===== New image =====
+document.getElementById('newImageBtn').addEventListener('click', () => {
+  image = null;
+  editorArea.classList.add('rz-hidden');
+  dz.classList.remove('rz-hidden');
+});
+
+// ===== Download =====
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!image) return;
+  const c = document.createElement('canvas');
+  c.width = Math.round(crop.w);
+  c.height = Math.round(crop.h);
+  const ctx2 = c.getContext('2d');
+  ctx2.drawImage(image, crop.x, crop.y, crop.w, crop.h, 0, 0, c.width, c.height);
+  c.toBlob(blob => {
+    if (!blob) { toast('导出失败'); return; }
+    const ext = origFileName.match(/\.(jpe?g|png|webp)$/i)?.[1] || 'png';
+    const name = origFileName.replace(/\.[^.]+$/, '') + '-cropped.' + ext;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('下载完成');
+  }, 'image/png');
+});
+
+// ===== Resize handler =====
+window.addEventListener('resize', debounce(() => { if (image) setupCanvas(); render(); }, 200));
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain Lookup — DevKit HQ</title>
+<meta name="description" content="Free domain WHOIS lookup tool. Check domain availability and registration info.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .dl-wrap{max-width:600px;margin:0 auto}
+  .dl-search{display:flex;gap:8px}
+  .dl-search .input{flex:1;font-size:var(--fs-base);padding:12px 16px;border-radius:var(--radius-md)}
+  .dl-result{margin-top:24px;animation:fadeUp 0.3s var(--ease-out)}
+  .dl-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:10px}
+  .dl-card.available{border-color:var(--green);background:var(--green-bg)}
+  .dl-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .dl-domain{font-size:var(--fs-md);font-weight:700;font-family:var(--font-mono)}
+  .dl-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:var(--fs-xs);font-weight:700}
+  .dl-badge.reg{background:var(--accent-glow);color:var(--accent)}
+  .dl-badge.avail{background:var(--green-bg);color:var(--green)}
+  .dl-badge.error{background:var(--red-bg);color:var(--red)}
+  .dl-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+  .dl-row:last-child{border-bottom:0}
+  .dl-row .dl-label{color:var(--text-secondary);font-size:var(--fs-sm)}
+  .dl-row .dl-value{font-size:var(--fs-sm);font-weight:500;text-align:right;font-family:var(--font-mono)}
+  .dl-ns{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+  .dl-ns span{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:var(--fs-xs);font-family:var(--font-mono)}
+  .dl-loading{text-align:center;padding:32px;color:var(--text-secondary)}
+  .dl-loading .spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.6s linear infinite;margin-bottom:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .dl-examples{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .dl-example{padding:4px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:var(--fs-xs);font-family:var(--font-mono);cursor:pointer;transition:all var(--dur) var(--ease)}
+  .dl-example:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+
+<main class="container page">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>🌐 域名查询</h1>
+    <p>查询域名 WHOIS 信息，判断能否注册</p>
+  </div>
+
+  <div class="dl-wrap">
+    <div class="dl-search">
+      <input type="text" class="input input-mono" id="domainInput" placeholder="输入域名，如 example.com" autocomplete="off" autofocus>
+      <button class="btn btn-primary" id="searchBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        查询
+      </button>
+    </div>
+    <div class="dl-examples">
+      <span style="font-size:var(--fs-xs);color:var(--text-tertiary);padding:4px 0">试试:</span>
+      <button class="dl-example" onclick="lookup('google.com')">google.com</button>
+      <button class="dl-example" onclick="lookup('github.com')">github.com</button>
+      <button class="dl-example" onclick="lookup('devkithq.com')">devkithq.com</button>
+      <button class="dl-example" onclick="lookup('this-probably-not-taken-2026.com')">未注册示例</button>
+    </div>
+
+    <div id="result" class="dl-result"></div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => { renderNav('domain'); applyI18n(); });
+
+const input = document.getElementById('domainInput');
+const result = document.getElementById('result');
+
+document.getElementById('searchBtn').addEventListener('click', () => lookup(input.value.trim()));
+input.addEventListener('keydown', e => { if (e.key === 'Enter') lookup(input.value.trim()); });
+
+function lookup(domain) {
+  if (!domain) return;
+  input.value = domain;
+  result.innerHTML = `<div class="dl-loading"><div class="spinner"></div><div>查询中...</div></div>`;
+
+  fetch(`/api/domain-lookup?domain=${encodeURIComponent(domain)}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        result.innerHTML = `<div class="dl-card" style="border-color:var(--red)"><div class="dl-card-header"><span class="dl-domain">${escapeHtml(domain)}</span><span class="dl-badge error">查询失败</span></div><div style="color:var(--red);font-size:var(--fs-sm)">${escapeHtml(data.error)}</div></div>`;
+      } else if (data.available) {
+        result.innerHTML = `
+          <div class="dl-card available">
+            <div class="dl-card-header">
+              <span class="dl-domain">${escapeHtml(data.domain)}</span>
+              <span class="dl-badge avail">可注册 ✨</span>
+            </div>
+            <div style="color:var(--green);font-size:var(--fs-base);font-weight:600">${escapeHtml(data.message)}</div>
+          </div>`;
+      } else {
+        const created = data.created ? new Date(data.created).toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'}) : '未知';
+        const expires = data.expires ? new Date(data.expires).toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'}) : '未知';
+        const updated = data.updated ? new Date(data.updated).toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'}) : '未知';
+        result.innerHTML = `
+          <div class="dl-card">
+            <div class="dl-card-header">
+              <span class="dl-domain">${escapeHtml(data.domain)}</span>
+              <span class="dl-badge reg">已注册</span>
+            </div>
+            <div class="dl-row"><span class="dl-label">后缀</span><span class="dl-value">${escapeHtml(data.tld)}</span></div>
+            <div class="dl-row"><span class="dl-label">注册商</span><span class="dl-value">${escapeHtml(data.registrar)}</span></div>
+            <div class="dl-row"><span class="dl-label">状态</span><span class="dl-value">${escapeHtml(data.status)}</span></div>
+            <div class="dl-row"><span class="dl-label">创建日期</span><span class="dl-value">${created}</span></div>
+            <div class="dl-row"><span class="dl-label">过期日期</span><span class="dl-value">${expires}</span></div>
+            <div class="dl-row"><span class="dl-label">最后更新</span><span class="dl-value">${updated}</span></div>
+            ${data.nameservers && data.nameservers.length ? `
+            <div style="padding:8px 0"><span class="dl-label" style="margin-bottom:6px;display:block">DNS 服务器</span>
+              <div class="dl-ns">${data.nameservers.map(ns => `<span>${escapeHtml(ns)}</span>`).join('')}</div>
+            </div>` : ''}
+          </div>`;
+      }
+    })
+    .catch(e => {
+      result.innerHTML = `<div class="dl-card" style="border-color:var(--red)"><div style="color:var(--red);font-size:var(--fs-sm)">网络错误: ${escapeHtml(e.message)}</div></div>`;
+    });
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

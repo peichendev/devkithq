@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 Codec — DevKit HQ</title>
+<meta name="description" content="Free online Base64 encoder and decoder. Supports Unicode (Chinese etc). All browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .tool-wrap{max-width:800px;margin:0 auto}
+  .tool-row{display:flex;flex-direction:column;gap:16px}
+  .tool-section{display:flex;flex-direction:column}
+  .tool-section label{display:block;font-size:var(--fs-sm);font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+  textarea.input{min-height:180px;font-family:var(--font-mono);font-size:var(--fs-sm);line-height:1.6;resize:vertical}
+  .tool-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tool-actions .spacer{flex:1}
+  .swap-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;font-size:18px;transition:all var(--dur) var(--ease);margin:0 auto}
+  .swap-icon:hover{border-color:var(--accent);background:var(--accent-glow);transform:rotate(180deg)}
+  @media(max-width:640px){.tool-actions .btn{flex:1;justify-content:center}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>🔐 Base64 编解码</h1>
+    <p>文本 ↔ Base64 在线编解码，支持中文等 Unicode 字符</p>
+  </div>
+
+  <div class="tool-wrap">
+    <div class="tool-row">
+      <!-- Input -->
+      <div class="tool-section">
+        <label>输入文本</label>
+        <textarea class="input" id="inputEl" placeholder="在此输入要编码的文本，或粘贴 Base64 字符串解码..."></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="tool-actions">
+        <button class="btn btn-primary" id="encodeBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 19 5 12 12 5"/><polyline points="19 12 5 12"/></svg>
+          编码 Encode
+        </button>
+        <button class="btn btn-secondary" id="decodeBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 5 19 12 12 19"/><polyline points="5 12 19 12"/></svg>
+          解码 Decode
+        </button>
+        <button class="btn btn-secondary" id="copyBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          复制结果
+        </button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost btn-sm" id="swapBtn" title="交换输入输出">↑↓ 交换</button>
+      </div>
+
+      <!-- Output -->
+      <div class="tool-section">
+        <label>输出结果</label>
+        <textarea class="input" id="outputEl" readonly placeholder="结果将显示在这里..." style="min-height:180px"></textarea>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderNav('dev');
+  applyI18n();
+
+  const inputEl = document.getElementById('inputEl');
+  const outputEl = document.getElementById('outputEl');
+
+  function encode() {
+    const raw = inputEl.value;
+    if (!raw) { outputEl.value = ''; return; }
+    try {
+      const bytes = new TextEncoder().encode(raw);
+      const binary = Array.from(bytes, b => String.fromCharCode(b)).join('');
+      outputEl.value = btoa(binary);
+    } catch (e) {
+      outputEl.value = '编码失败: ' + e.message;
+    }
+  }
+
+  function decode() {
+    const raw = inputEl.value.trim();
+    if (!raw) { outputEl.value = ''; return; }
+    try {
+      const binary = atob(raw);
+      const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+      outputEl.value = new TextDecoder().decode(bytes);
+    } catch (e) {
+      outputEl.value = '解码失败: 请检查输入是否为有效的 Base64 字符串';
+    }
+  }
+
+  document.getElementById('encodeBtn').addEventListener('click', encode);
+  document.getElementById('decodeBtn').addEventListener('click', decode);
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    if (outputEl.value) { copyToClipboard(outputEl.value); } else { toast('没有可复制的内容'); }
+  });
+  document.getElementById('swapBtn').addEventListener('click', () => {
+    const tmp = inputEl.value;
+    inputEl.value = outputEl.value;
+    outputEl.value = tmp;
+    outputEl.removeAttribute('readonly');
+    outputEl.focus();
+  });
+
+  // Ctrl+Enter to encode
+  inputEl.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') encode();
+  });
+});
+</script>
+</body>
+</html>

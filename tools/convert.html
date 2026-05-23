@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Format Converter — DevKit HQ</title>
+<meta name="description" content="Convert images between JPEG, PNG, WebP formats. Browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .cv-wrap{max-width:640px;margin:0 auto}
+  .cv-preview{margin-top:24px;text-align:center}
+  .cv-preview img{max-width:100%;max-height:360px;border-radius:var(--radius);border:1px solid var(--border)}
+  .cv-info{display:flex;gap:24px;justify-content:center;align-items:center;margin-top:16px;flex-wrap:wrap}
+  .cv-info-item{text-align:center}
+  .cv-info-item .lbl{display:block;font-size:var(--fs-xs);color:var(--text-tertiary)}
+  .cv-info-item .val{font-size:var(--fs-md);font-weight:700}
+  .cv-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:20px}
+  .cv-controls .mc-g{flex:1;min-width:100px}
+  .cv-controls label{font-size:var(--fs-xs);color:var(--text-secondary);font-weight:600}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+
+<main class="container page">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>🔄 格式转换</h1>
+    <p>JPEG / PNG / WebP 互转，可调质量与尺寸</p>
+  </div>
+
+  <div class="cv-wrap">
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M16 3h5v5"/><path d="M21 3l-7.5 7.5"/><path d="M8 21H3v-5"/><path d="M3 21l7.5-7.5"/></svg></div>
+      <div class="dropzone-title">拖拽或点击上传图片</div>
+      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+    </div>
+
+    <div id="resultArea" style="display:none">
+      <div class="cv-preview"><img id="preview" alt="Preview"></div>
+      <div class="cv-info">
+        <div class="cv-info-item"><span class="lbl">原始</span><span class="val" id="origSize">-</span></div>
+        <span style="color:var(--text-tertiary)">→</span>
+        <div class="cv-info-item"><span class="lbl">转换后</span><span class="val" style="color:var(--green)" id="convSize">-</span></div>
+      </div>
+      <div class="cv-controls">
+        <div class="mc-g"><label>输出格式</label><select class="input" id="outFmt"><option value="jpeg">JPEG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
+        <div class="mc-g"><label>质量 <span style="color:var(--accent)" id="qVal">85</span>%</label><input type="range" id="qSlider" min="5" max="100" value="85"></div>
+        <div class="mc-g"><label>最大宽度</label><select class="input" id="maxW"><option value="0">原始</option><option value="1920">1920px</option><option value="1280">1280px</option><option value="800">800px</option></select></div>
+      </div>
+      <div class="flex gap-sm mt-md justify-between">
+        <button class="btn btn-ghost btn-sm" id="resetBtn">重新选择</button>
+        <button class="btn btn-primary" id="downloadBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载转换后图片
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => { renderNav('image'); applyI18n(); });
+
+let origFile = null, origImage = null, convBlob = null;
+
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+const resultArea = document.getElementById('resultArea');
+
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+document.getElementById('uploadBtn').addEventListener('click', () => fi.click());
+fi.addEventListener('change', e => { if (e.target.files[0]) { loadFile(e.target.files[0]); fi.value = ''; } });
+
+function loadFile(file) {
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  origFile = file;
+  const img = new Image();
+  img.onload = () => {
+    origImage = img;
+    document.getElementById('preview').src = URL.createObjectURL(file);
+    document.getElementById('origSize').textContent = formatBytes(file.size);
+    resultArea.style.display = 'block';
+    convert();
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+function convert() {
+  if (!origImage) return;
+  const mime = { jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+  const fmt = mime[document.getElementById('outFmt').value] || 'image/jpeg';
+  const q = parseInt(document.getElementById('qSlider').value) / 100;
+  const mw = parseInt(document.getElementById('maxW').value);
+  const c = document.createElement('canvas');
+  let w = origImage.naturalWidth, h = origImage.naturalHeight;
+  if (mw > 0 && w > mw) { h = Math.round((mw / w) * h); w = mw; }
+  c.width = w; c.height = h;
+  c.getContext('2d').drawImage(origImage, 0, 0, w, h);
+  c.toBlob(b => {
+    if (!b) return;
+    convBlob = b;
+    document.getElementById('preview').src = URL.createObjectURL(b);
+    document.getElementById('convSize').textContent = formatBytes(b.size);
+  }, fmt, q);
+}
+
+document.getElementById('outFmt').addEventListener('change', convert);
+document.getElementById('maxW').addEventListener('change', convert);
+document.getElementById('qSlider').addEventListener('input', function() {
+  document.getElementById('qVal').textContent = this.value;
+  convert();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  origFile = null; origImage = null; convBlob = null;
+  resultArea.style.display = 'none';
+});
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!convBlob || !origFile) return;
+  const ext = document.getElementById('outFmt').value;
+  const name = origFile.name.replace(/\.[^.]+$/,'') + '.' + ext;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(convBlob);
+  a.download = name;
+  a.click();
+});
+</script>
+</body>
+</html>

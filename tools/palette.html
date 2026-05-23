@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Palette Extractor — DevKit HQ</title>
+<meta name="description" content="Extract dominant colors from any image. Browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .pl-wrap{max-width:720px;margin:0 auto}
+  .pl-hidden{display:none !important}
+
+  .pl-preview-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:24px;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)}
+  .pl-thumb{border-radius:var(--radius);border:1px solid var(--border);width:100px;height:100px;object-fit:cover;flex-shrink:0}
+  .pl-meta{font-size:var(--fs-xs);color:var(--text-secondary)}
+  .pl-meta strong{color:var(--text)}
+
+  .pl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .pl-swatch{cursor:pointer;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);transition:all var(--dur) var(--ease);background:var(--bg-card)}
+  .pl-swatch:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+  .pl-swatch:active{transform:scale(0.96)}
+  .pl-swatch-color{height:100px;position:relative;transition:filter var(--dur) var(--ease)}
+  .pl-swatch:hover .pl-swatch-color{filter:brightness(1.08)}
+  .pl-swatch-info{padding:10px 12px}
+  .pl-swatch-hex{font-family:var(--font-mono);font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:2px}
+  .pl-swatch-pct{font-size:var(--fs-xs);color:var(--text-tertiary)}
+  .pl-swatch-copy{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);opacity:0;transition:opacity var(--dur) var(--ease);font-size:var(--fs-xs);font-weight:600;color:#fff;letter-spacing:0.03em}
+  .pl-swatch:hover .pl-swatch-copy{opacity:1}
+
+  .pl-empty{text-align:center;padding:48px 24px;color:var(--text-tertiary)}
+  .pl-empty svg{margin-bottom:12px;opacity:0.4}
+
+  @media(max-width:640px){
+    .pl-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+    .pl-swatch-color{height:72px}
+    .pl-preview-row{flex-direction:column;align-items:flex-start}
+  }
+  @media(max-width:400px){
+    .pl-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container page">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>🎨 色彩提取</h1>
+    <p>上传图片，自动提取主色调与配色方案</p>
+  </div>
+
+  <div class="pl-wrap">
+    <!-- Dropzone -->
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="7.5" cy="7.5" r="1.5" fill="var(--accent)"/><circle cx="16.5" cy="7.5" r="1.5" fill="var(--accent)"/><circle cx="12" cy="14" r="1.5" fill="var(--accent)"/><circle cx="16.5" cy="16.5" r="1.5" fill="var(--accent)"/><circle cx="7.5" cy="16.5" r="1.5" fill="var(--accent)"/></svg>
+      </div>
+      <div class="dropzone-title">拖拽或点击上传图片</div>
+      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+    </div>
+
+    <!-- Results (shown after extraction) -->
+    <div id="resultArea" class="pl-hidden">
+      <!-- Image preview row -->
+      <div class="pl-preview-row">
+        <img class="pl-thumb" id="plThumb" alt="Source image">
+        <div class="pl-meta">
+          <div>文件名：<strong id="plName">-</strong></div>
+          <div>尺寸：<strong id="plDims">-</strong></div>
+          <div>主色调：<strong id="plCount">-</strong></div>
+        </div>
+        <div style="margin-left:auto">
+          <button class="btn btn-ghost btn-sm" id="newImageBtn">重新选择</button>
+        </div>
+      </div>
+
+      <!-- Color swatches -->
+      <div class="pl-grid" id="swatchGrid"></div>
+
+      <!-- Empty state -->
+      <div class="pl-empty pl-hidden" id="plEmpty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p>无法提取颜色，请尝试其他图片</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => { renderNav('image'); applyI18n(); });
+
+// ===== DOM refs =====
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+const resultArea = document.getElementById('resultArea');
+const swatchGrid = document.getElementById('swatchGrid');
+const plEmpty = document.getElementById('plEmpty');
+
+// ===== Upload =====
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) processImage(e.dataTransfer.files[0]); });
+document.getElementById('uploadBtn').addEventListener('click', () => fi.click());
+fi.addEventListener('change', e => { if (e.target.files[0]) { processImage(e.target.files[0]); fi.value = ''; } });
+
+function processImage(file) {
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+
+  const img = new Image();
+  img.onload = () => {
+    // Show image info
+    document.getElementById('plThumb').src = URL.createObjectURL(file);
+    document.getElementById('plName').textContent = file.name;
+    document.getElementById('plDims').textContent = `${img.naturalWidth} × ${img.naturalHeight}`;
+
+    // Extract colors
+    const colors = extractColors(img, 8);
+    document.getElementById('plCount').textContent = `${colors.length} 个`;
+
+    // Render swatches
+    swatchGrid.innerHTML = '';
+    if (colors.length === 0) {
+      plEmpty.classList.remove('pl-hidden');
+    } else {
+      plEmpty.classList.add('pl-hidden');
+      colors.forEach((c, i) => {
+        const swatch = createSwatch(c, i === 0);
+        swatchGrid.appendChild(swatch);
+      });
+    }
+
+    dz.classList.add('pl-hidden');
+    resultArea.classList.remove('pl-hidden');
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+// ===== Color extraction =====
+function extractColors(img, maxColors) {
+  // 1. Draw image scaled down
+  const maxDim = 150;
+  let w = img.naturalWidth, h = img.naturalHeight;
+  if (w > maxDim || h > maxDim) {
+    const s = Math.min(maxDim / w, maxDim / h);
+    w = Math.round(w * s);
+    h = Math.round(h * s);
+  }
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0, w, h);
+
+  // 2. Get pixel data
+  const data = ctx.getImageData(0, 0, w, h).data;
+  const totalPixels = w * h;
+
+  // 3. Quantize to 4 bits per channel (16 levels → 4096 buckets)
+  const BITS = 4;
+  const SHIFT = 8 - BITS;
+  const buckets = {};
+
+  for (let i = 0; i < totalPixels; i++) {
+    const r = data[i * 4] >> SHIFT;
+    const g = data[i * 4 + 1] >> SHIFT;
+    const b = data[i * 4 + 2] >> SHIFT;
+    const a = data[i * 4 + 3];
+    if (a < 128) continue; // skip transparent pixels
+    const key = (r << (BITS * 2)) | (g << BITS) | b;
+    if (buckets[key]) {
+      buckets[key].count++;
+      buckets[key].rSum += data[i * 4];
+      buckets[key].gSum += data[i * 4 + 1];
+      buckets[key].bSum += data[i * 4 + 2];
+    } else {
+      buckets[key] = {
+        count: 1,
+        rSum: data[i * 4],
+        gSum: data[i * 4 + 1],
+        bSum: data[i * 4 + 2]
+      };
+    }
+  }
+
+  // 4. Convert to array of {hex, count, pct}
+  const entries = Object.values(buckets).map(b => {
+    const r = Math.round(b.rSum / b.count);
+    const g = Math.round(b.gSum / b.count);
+    const bl = Math.round(b.bSum / b.count);
+    return {
+      hex: rgbToHex(r, g, bl),
+      count: b.count,
+      pct: (b.count / totalPixels * 100)
+    };
+  });
+
+  // 5. Sort by frequency descending
+  entries.sort((a, b) => b.count - a.count);
+
+  // 6. Merge similar colors (greedy)
+  const threshold = 45; // Euclidean distance in RGB
+  const merged = [];
+  for (const e of entries) {
+    const rgb1 = hexToRgb(e.hex);
+    let tooClose = false;
+    for (const m of merged) {
+      const rgb2 = hexToRgb(m.hex);
+      const dist = Math.sqrt(
+        (rgb1.r - rgb2.r) ** 2 + (rgb1.g - rgb2.g) ** 2 + (rgb1.b - rgb2.b) ** 2
+      );
+      if (dist < threshold) {
+        tooClose = true;
+        break;
+      }
+    }
+    if (!tooClose) {
+      merged.push(e);
+      if (merged.length >= maxColors) break;
+    }
+  }
+
+  return merged;
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToRgb(hex) {
+  const v = parseInt(hex.slice(1), 16);
+  return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
+}
+
+// ===== Create swatch element =====
+function createSwatch(color, isDominant) {
+  const el = document.createElement('div');
+  el.className = 'pl-swatch anim-scaleIn';
+
+  const colorEl = document.createElement('div');
+  colorEl.className = 'pl-swatch-color';
+  colorEl.style.backgroundColor = color.hex;
+
+  const copyEl = document.createElement('div');
+  copyEl.className = 'pl-swatch-copy';
+  copyEl.textContent = '点击复制';
+  colorEl.appendChild(copyEl);
+
+  const infoEl = document.createElement('div');
+  infoEl.className = 'pl-swatch-info';
+  infoEl.innerHTML = `
+    <div class="pl-swatch-hex">${color.hex.toUpperCase()}</div>
+    <div class="pl-swatch-pct">${color.pct.toFixed(1)}%${isDominant ? ' · 主色调' : ''}</div>
+  `;
+
+  el.appendChild(colorEl);
+  el.appendChild(infoEl);
+
+  el.addEventListener('click', () => {
+    copyToClipboard(color.hex.toUpperCase());
+    // Brief visual feedback
+    copyEl.textContent = '已复制!';
+    copyEl.style.background = 'rgba(16,185,129,0.7)';
+    setTimeout(() => {
+      copyEl.textContent = '点击复制';
+      copyEl.style.background = 'rgba(0,0,0,0.4)';
+    }, 800);
+  });
+
+  return el;
+}
+
+// ===== New image =====
+document.getElementById('newImageBtn').addEventListener('click', () => {
+  resultArea.classList.add('pl-hidden');
+  dz.classList.remove('pl-hidden');
+  swatchGrid.innerHTML = '';
+});
+</script>
+</body>
+</html>

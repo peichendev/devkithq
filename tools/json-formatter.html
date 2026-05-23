@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Formatter — DevKit HQ</title>
+<meta name="description" content="Free online JSON formatter and validator. Beautify, minify, validate JSON with error highlighting. All browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .tool-wrap{max-width:800px;margin:0 auto}
+  .tool-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tool-toolbar .btn{gap:6px}
+  .tool-output{position:relative}
+  .tool-output .btn-icon{position:absolute;top:8px;right:8px;z-index:2}
+  .error-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--red-bg);color:var(--red);border-radius:20px;font-size:var(--fs-xs);font-weight:600;margin-bottom:12px}
+  .error-line{background:rgba(239,68,68,0.15);border-left:3px solid var(--red);padding:2px 8px;margin:2px 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+  .stat-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:var(--fs-xs);color:var(--text-secondary)}
+  .stat-row span{color:var(--text);font-weight:600}
+  textarea.input{min-height:280px;font-family:var(--font-mono);font-size:var(--fs-sm);line-height:1.6;resize:vertical}
+  @media(max-width:640px){
+    .tool-toolbar{flex-direction:column}
+    .tool-toolbar .btn{width:100%;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>📋 JSON 格式化</h1>
+    <p>粘贴 JSON 一键美化或压缩，错误自动标注行号，支持一键复制</p>
+  </div>
+
+  <div class="tool-wrap">
+    <textarea class="input" id="inputEl" placeholder="在此粘贴 JSON..."></textarea>
+
+    <div id="errorBox" style="margin-top:12px"></div>
+    <div class="stat-row" id="statRow" style="display:none">
+      <span id="statLines">0</span> 行 · <span id="statChars">0</span> 字符 · <span id="statSize">0</span>
+    </div>
+
+    <div class="tool-toolbar" style="margin-top:12px">
+      <button class="btn btn-primary" id="formatBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        格式化
+      </button>
+      <button class="btn btn-secondary" id="minifyBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        压缩
+      </button>
+      <button class="btn btn-secondary" id="copyBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        复制结果
+      </button>
+      <button class="btn btn-ghost" id="clearBtn">清空</button>
+    </div>
+
+    <div class="tool-output" style="margin-top:16px">
+      <div class="code-block" id="outputEl" style="min-height:160px;color:var(--text-secondary)">等待输入...</div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderNav('dev');
+  applyI18n();
+
+  const inputEl = document.getElementById('inputEl');
+  const outputEl = document.getElementById('outputEl');
+  const errorBox = document.getElementById('errorBox');
+  const statRow = document.getElementById('statRow');
+  const statLines = document.getElementById('statLines');
+  const statChars = document.getElementById('statChars');
+  const statSize = document.getElementById('statSize');
+
+  let lastOutput = '';
+
+  function showError(msg) {
+    errorBox.innerHTML = `<div class="error-badge">⚠️ ${msg}</div>`;
+  }
+
+  function clearError() {
+    errorBox.innerHTML = '';
+  }
+
+  function showStats(text) {
+    const lines = text ? text.split('\n').length : 0;
+    const chars = text.length;
+    statLines.textContent = lines.toLocaleString();
+    statChars.textContent = chars.toLocaleString();
+    statSize.textContent = formatBytes(new Blob([text]).size);
+    statRow.style.display = 'flex';
+  }
+
+  function formatJSON() {
+    const raw = inputEl.value.trim();
+    if (!raw) { outputEl.textContent = '等待输入...'; outputEl.style.color = 'var(--text-secondary)'; statRow.style.display = 'none'; clearError(); lastOutput = ''; return; }
+    try {
+      const obj = JSON.parse(raw);
+      const pretty = JSON.stringify(obj, null, 2);
+      outputEl.textContent = pretty;
+      outputEl.style.color = 'var(--text)';
+      clearError();
+      showStats(pretty);
+      lastOutput = pretty;
+    } catch (e) {
+      const match = e.message.match(/position\s+(\d+)/);
+      let errMsg = e.message;
+      if (match) {
+        const pos = parseInt(match[1]);
+        const before = raw.substring(0, pos);
+        const line = before.split('\n').length;
+        errMsg = `第 ${line} 行 — ${e.message}`;
+        const lines = raw.split('\n');
+        const errorLine = lines[line - 1] || '';
+        showError(errMsg);
+        errorBox.innerHTML += `<div class="code-block" style="margin-top:8px;padding:12px;font-size:var(--fs-xs);max-height:120px"><div class="error-line">${line}: ${escapeHTML(errorLine)}</div></div>`;
+      } else {
+        showError(errMsg);
+      }
+      lastOutput = '';
+    }
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function minifyJSON() {
+    const raw = inputEl.value.trim();
+    if (!raw) { outputEl.textContent = '等待输入...'; outputEl.style.color = 'var(--text-secondary)'; statRow.style.display = 'none'; clearError(); lastOutput = ''; return; }
+    try {
+      const obj = JSON.parse(raw);
+      const min = JSON.stringify(obj);
+      outputEl.textContent = min;
+      outputEl.style.color = 'var(--text)';
+      clearError();
+      showStats(min);
+      lastOutput = min;
+    } catch (e) {
+      showError(e.message);
+      lastOutput = '';
+    }
+  }
+
+  document.getElementById('formatBtn').addEventListener('click', formatJSON);
+  document.getElementById('minifyBtn').addEventListener('click', minifyJSON);
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    inputEl.value = '';
+    outputEl.textContent = '等待输入...';
+    outputEl.style.color = 'var(--text-secondary)';
+    statRow.style.display = 'none';
+    clearError();
+    lastOutput = '';
+  });
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    if (lastOutput) { copyToClipboard(lastOutput); } else { toast('没有可复制的内容'); }
+  });
+
+  // Auto-format on Ctrl+Enter
+  inputEl.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') formatJSON();
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timestamp Converter — DevKit HQ</title>
+<meta name="description" content="Free online Unix timestamp converter. Convert between timestamps and human-readable dates. Show Beijing time, UTC, ISO format, relative time. Live clock.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .tool-wrap{max-width:720px;margin:0 auto}
+  .live-clock{text-align:center;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:24px}
+  .live-clock .now{font-size:var(--fs-2xl);font-weight:800;font-family:var(--font-mono);letter-spacing:-0.02em;margin-bottom:4px}
+  .live-clock .ts{font-size:var(--fs-sm);color:var(--text-secondary);font-family:var(--font-mono);cursor:pointer;transition:color var(--dur) var(--ease)}
+  .live-clock .ts:hover{color:var(--accent)}
+  .live-clock .hint{font-size:var(--fs-xs);color:var(--text-tertiary);margin-top:4px}
+  .input-row{display:flex;gap:8px;margin-bottom:24px}
+  .input-row input{flex:1}
+  .input-row .btn{flex-shrink:0}
+  .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+  .result-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;transition:all var(--dur) var(--ease)}
+  .result-card:hover{border-color:var(--border-hover)}
+  .result-card .rl{font-size:var(--fs-xs);color:var(--text-tertiary);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.03em}
+  .result-card .rv{font-size:var(--fs-base);font-weight:600;font-family:var(--font-mono);word-break:break-all}
+  .result-card .rv-sub{font-size:var(--fs-sm);color:var(--text-secondary);margin-top:2px}
+  .divider-label{display:flex;align-items:center;gap:12px;margin:28px 0 16px;color:var(--text-tertiary);font-size:var(--fs-sm)}
+  .divider-label::after,.divider-label::before{content:'';flex:1;height:1px;background:var(--border)}
+  .reverse-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+  .reverse-row .field{flex:1;min-width:140px}
+  .reverse-row .field label{display:block;font-size:var(--fs-xs);font-weight:600;color:var(--text-secondary);margin-bottom:4px}
+  .reverse-row .field input,.reverse-row .field select{width:100%}
+  .tz-select{min-width:200px}
+  @media(max-width:640px){
+    .result-grid{grid-template-columns:1fr}
+    .input-row{flex-direction:column}
+    .reverse-row{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>🕐 时间戳转换</h1>
+    <p>Unix 时间戳 ↔ 日期时间互转，支持秒/毫秒自动识别</p>
+  </div>
+
+  <div class="tool-wrap">
+    <!-- Live clock -->
+    <div class="live-clock anim-fadeUp">
+      <div class="now" id="liveTime">--</div>
+      <div class="ts" id="liveTs" title="点击复制时间戳">--</div>
+      <div class="hint">当前北京时间 · 实时更新 · 点击时间戳复制</div>
+    </div>
+
+    <!-- Timestamp → Date -->
+    <div class="input-row">
+      <input type="text" class="input input-mono" id="tsInput" placeholder="输入 Unix 时间戳，如 1716500000（秒）或 1716500000000（毫秒）">
+      <button class="btn btn-primary" id="convertBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 19 5 12 12 5"/><polyline points="19 12 5 12"/></svg>
+        转换
+      </button>
+      <button class="btn btn-secondary" id="nowBtn">当前时间</button>
+    </div>
+
+    <!-- Results -->
+    <div class="result-grid" id="resultGrid" style="display:none">
+      <div class="result-card">
+        <div class="rl">北京时间 (UTC+8)</div>
+        <div class="rv" id="rBeijing">--</div>
+      </div>
+      <div class="result-card">
+        <div class="rl">UTC 时间</div>
+        <div class="rv" id="rUTC">--</div>
+      </div>
+      <div class="result-card">
+        <div class="rl">ISO 8601 格式</div>
+        <div class="rv" id="rISO">--</div>
+      </div>
+      <div class="result-card">
+        <div class="rl">相对时间</div>
+        <div class="rv" id="rRelative">--</div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider-label">反向转换 · 日期 → 时间戳</div>
+
+    <!-- Date → Timestamp -->
+    <div class="reverse-row">
+      <div class="field">
+        <label>日期</label>
+        <input type="date" class="input" id="dateInput">
+      </div>
+      <div class="field">
+        <label>时间</label>
+        <input type="time" class="input" id="timeInput" step="1">
+      </div>
+      <div class="field" style="min-width:100px">
+        <label>结果</label>
+        <div class="code-block" id="reverseResult" style="padding:10px 14px;font-size:var(--fs-base);min-height:unset;max-height:unset">--</div>
+      </div>
+    </div>
+
+    <div class="flex gap-sm items-center mt-sm" style="font-size:var(--fs-xs);color:var(--text-secondary)">
+      <button class="btn btn-secondary btn-sm" id="copyReverseBtn">复制时间戳</button>
+      <span>提示：选择日期和时间后自动计算</span>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderNav('dev');
+  applyI18n();
+
+  const $ = id => document.getElementById(id);
+  const liveTime = $('liveTime');
+  const liveTs = $('liveTs');
+  const tsInput = $('tsInput');
+  const resultGrid = $('resultGrid');
+
+  let reverseTs = null;
+
+  // ---- Formatting helpers ----
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function fmtDate(d) {
+    const y = d.getFullYear();
+    const mo = pad(d.getMonth() + 1);
+    const da = pad(d.getDate());
+    const h = pad(d.getHours());
+    const mi = pad(d.getMinutes());
+    const s = pad(d.getSeconds());
+    return `${y}-${mo}-${da} ${h}:${mi}:${s}`;
+  }
+
+  function fmtISO(d) {
+    return d.toISOString().replace('Z', '').slice(0, 19);
+  }
+
+  function relativeTime(d) {
+    const now = Date.now();
+    const diff = now - d.getTime();
+    const abs = Math.abs(diff);
+    const isPast = diff >= 0;
+    const suffix = isPast ? '前' : '后';
+
+    const sec = Math.floor(abs / 1000);
+    if (sec < 60) return `${sec} 秒${suffix}`;
+    const min = Math.floor(sec / 60);
+    if (min < 60) return `${min} 分钟${suffix}`;
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return `${hr} 小时${suffix}`;
+    const day = Math.floor(hr / 24);
+    if (day < 30) return `${day} 天${suffix}`;
+    const mon = Math.floor(day / 30);
+    if (mon < 12) return `${mon} 个月${suffix}`;
+    const yr = Math.floor(mon / 12);
+    return `${yr} 年${suffix}`;
+  }
+
+  // ---- Convert timestamp → display ----
+  function convertTs() {
+    const raw = tsInput.value.trim();
+    if (!raw) { resultGrid.style.display = 'none'; return; }
+    let ts = parseInt(raw, 10);
+    if (isNaN(ts)) { resultGrid.style.display = 'none'; toast('请输入有效的数字时间戳'); return; }
+    // Auto-detect seconds vs milliseconds: if ts > 1e11, treat as ms
+    if (ts > 9999999999) ts = Math.floor(ts / 1000);
+    const d = new Date(ts * 1000);
+    if (isNaN(d.getTime())) { resultGrid.style.display = 'none'; toast('无效的时间戳'); return; }
+
+    // Beijing time
+    const bj = new Date(d.getTime() + 8 * 3600000);
+    $('rBeijing').textContent = fmtDate(bj);
+    // UTC
+    const utc = new Date(d.getTime());
+    $('rUTC').textContent = fmtDate(utc);
+    // ISO
+    $('rISO').textContent = fmtISO(d);
+    // Relative
+    $('rRelative').textContent = relativeTime(d);
+
+    resultGrid.style.display = 'grid';
+  }
+
+  // ---- Current time ----
+  function setCurrentTime() {
+    const ts = Math.floor(Date.now() / 1000);
+    tsInput.value = ts;
+    convertTs();
+  }
+
+  // ---- Live clock ----
+  function updateClock() {
+    const now = new Date();
+    liveTime.textContent = fmtDate(now);
+    liveTs.textContent = Math.floor(now.getTime() / 1000) + ' (秒)  |  ' + now.getTime() + ' (毫秒)';
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  liveTs.addEventListener('click', () => {
+    copyToClipboard(String(Math.floor(Date.now() / 1000)));
+  });
+
+  // ---- Bindings ----
+  $('convertBtn').addEventListener('click', convertTs);
+  $('nowBtn').addEventListener('click', setCurrentTime);
+  tsInput.addEventListener('keydown', e => { if (e.key === 'Enter') convertTs(); });
+
+  // ---- Reverse: date → timestamp ----
+  const dateInput = $('dateInput');
+  const timeInput = $('timeInput');
+  const reverseResult = $('reverseResult');
+
+  function updateReverse() {
+    const d = dateInput.value;
+    const t = timeInput.value || '00:00:00';
+    if (!d) { reverseResult.textContent = '--'; reverseTs = null; return; }
+    const local = new Date(d + 'T' + t);
+    if (isNaN(local.getTime())) { reverseResult.textContent = '无效日期'; reverseTs = null; return; }
+    reverseTs = Math.floor(local.getTime() / 1000);
+    reverseResult.textContent = reverseTs + ' (秒)\n' + (reverseTs * 1000) + ' (毫秒)';
+  }
+
+  // Set default to now
+  const now = new Date();
+  dateInput.value = now.toISOString().slice(0, 10);
+  timeInput.value = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+  updateReverse();
+
+  dateInput.addEventListener('change', updateReverse);
+  timeInput.addEventListener('change', updateReverse);
+  // Auto-update on input too
+  dateInput.addEventListener('input', debounce(updateReverse, 500));
+  timeInput.addEventListener('input', debounce(updateReverse, 500));
+
+  $('copyReverseBtn').addEventListener('click', () => {
+    if (reverseTs) { copyToClipboard(String(reverseTs)); } else { toast('请先选择有效日期'); }
+  });
+
+  // Initial conversion with current timestamp
+  setCurrentTime();
+});
+</script>
+</body>
+</html>

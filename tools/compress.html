@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Compressor — DevKit HQ</title>
+<meta name="description" content="Smart online image compression for JPEG, PNG, WebP. Batch processing, browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .cmp-wrap{max-width:720px;margin:0 auto}
+  .cmp-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:16px 0}
+  .cmp-grid.show{display:grid}
+  .cmp-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:8px;position:relative;cursor:default;transition:all var(--dur) var(--ease)}
+  .cmp-card.done{cursor:pointer}
+  .cmp-card.done:hover{border-color:var(--accent)}
+  .cmp-card img{width:100%;height:90px;object-fit:cover;border-radius:4px;background:var(--border)}
+  .cmp-card .name{font-size:11px;font-weight:600;margin:5px 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cmp-card .size{font-size:11px;color:var(--text-tertiary)}
+  .cmp-card .save{font-size:11px;color:var(--green);font-weight:600}
+  .cmp-card .del{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,0.5);color:#fff;cursor:pointer;font-size:12px;line-height:0;display:flex;align-items:center;justify-content:center}
+  .cmp-card .del:hover{background:var(--red)}
+  .cmp-bar{display:none;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin:16px 0}
+  .cmp-bar.show{display:flex}
+  .cmp-sticky{position:fixed;bottom:0;left:0;right:0;background:var(--bg-elevated);border-top:1px solid var(--border);padding:12px 24px;display:none;z-index:50;box-shadow:0 -4px 24px rgba(0,0,0,0.3)}
+  .cmp-sticky.show{display:block}
+  .cmp-sticky-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+  .cmp-sticky-info{font-size:var(--fs-sm)}
+  .cmp-sticky-info strong{color:var(--accent)}
+  .cmp-progress{display:none;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px}
+  .cmp-progress.show{display:block}
+  /* Modal controls */
+  .mc-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+  .mc-g{flex:1;min-width:120px}
+  .mc-g label{display:block;font-size:var(--fs-xs);font-weight:600;color:var(--text-secondary);margin-bottom:4px}
+  .mc-g label span{color:var(--accent);font-weight:700}
+  .cmp-preview{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--border);margin-bottom:16px}
+  .cmp-preview img{display:block;width:100%;height:auto}
+  .cmp-info{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+  .cmp-info-item{text-align:center}
+  .cmp-info-label{display:block;font-size:var(--fs-xs);color:var(--text-tertiary);margin-bottom:2px}
+  .cmp-info-val{font-size:var(--fs-md);font-weight:700}
+  .cmp-info-save{display:block;font-size:var(--fs-sm);font-weight:700;color:var(--green);margin-top:2px}
+  .cmp-info-arrow{color:var(--text-tertiary);padding-top:12px}
+  @media(max-width:640px){.cmp-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>📦 图片压缩</h1>
+    <p>智能压缩 JPEG / PNG / WebP，所有处理在浏览器本地完成</p>
+  </div>
+
+  <div class="cmp-wrap">
+
+    <!-- Dropzone -->
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="dropzone-title">把图片拖到此处</div>
+      <div class="dropzone-sub">或点击选择文件</div>
+      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple hidden>
+      <div class="dropzone-info">支持 JPEG / PNG / WebP · 单张最大 20MB</div>
+    </div>
+
+    <!-- Count bar -->
+    <div class="cmp-bar" id="countBar">
+      <div><strong id="countNum">0</strong> 个文件</div>
+      <div class="flex gap-sm">
+        <button class="btn btn-primary btn-sm" id="compressBtn">全部压缩</button>
+        <button class="btn btn-ghost btn-sm" id="clearBtn">清空</button>
+      </div>
+    </div>
+
+    <!-- Image Grid -->
+    <div class="cmp-grid" id="imgGrid"></div>
+
+    <!-- Progress -->
+    <div class="cmp-progress" id="progressArea">
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+      <div class="text-center text-secondary" style="font-size:var(--fs-sm)" id="progText">处理中...</div>
+    </div>
+  </div>
+</main>
+
+<!-- Sticky bar -->
+<div class="cmp-sticky" id="stickyBar">
+  <div class="cmp-sticky-inner">
+    <div class="cmp-sticky-info">已压缩 <strong id="readyCount">0</strong> 张</div>
+    <div class="flex gap-sm">
+      <button class="btn btn-ghost btn-sm" id="startOverBtn">重新开始</button>
+      <button class="btn btn-primary btn-sm" id="downloadBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载全部
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <h3 style="font-size:var(--fs-md);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      压缩前后对比
+    </h3>
+    <div class="cmp-preview"><img id="cmpPreview" alt="Compressed preview"></div>
+    <div class="cmp-info">
+      <div class="cmp-info-item"><span class="cmp-info-label">原始</span><span class="cmp-info-val" id="origStat">-</span></div>
+      <div class="cmp-info-arrow">→</div>
+      <div class="cmp-info-item"><span class="cmp-info-label">压缩后</span><span class="cmp-info-val" style="color:var(--green)" id="compStat">-</span><span class="cmp-info-save" id="saveStat">-</span></div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-g"><label>质量 <span id="modalQVal">80</span>%</label><input type="range" id="modalQSlider" min="5" max="95" value="80"></div>
+      <div class="mc-g"><label>格式</label><select class="input" id="modalFmt"><option value="jpeg">JPEG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
+      <div class="mc-g"><label>最大宽度</label><select class="input" id="modalW"><option value="0">原始</option><option value="1920">1920px</option><option value="1280">1280px</option><option value="800">800px</option></select></div>
+    </div>
+    <div class="flex gap-sm justify-between mt-md">
+      <button class="btn btn-ghost btn-sm" id="modalCloseBtn">关闭</button>
+      <button class="btn btn-primary" id="modalDownloadBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载压缩图片
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script src="../js/tools/compress.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderNav('image');
+  applyI18n();
+});
+</script>
+</body>
+</html>

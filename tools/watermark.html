@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watermark Tool — DevKit HQ</title>
+<meta name="description" content="Add text or image watermarks to your photos. Browser-based, privacy-first.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
+<link rel="stylesheet" href="../css/global.css">
+<style>
+  .wm-wrap{max-width:720px;margin:0 auto}
+  .wm-tabs{display:flex;gap:2px;margin-bottom:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:3px}
+  .wm-tab{flex:1;padding:8px 16px;border-radius:var(--radius-sm);border:none;background:transparent;color:var(--text-secondary);font-size:var(--fs-sm);font-weight:500;cursor:pointer;transition:all var(--dur) var(--ease)}
+  .wm-tab.active{background:var(--accent);color:#fff}
+  .wm-tab:hover:not(.active){color:var(--text);background:var(--border)}
+
+  .wm-preview{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect width="8" height="8" fill="%23111"/><rect x="8" y="8" width="8" height="8" fill="%23111"/></svg>') repeat;background-size:16px 16px;margin-bottom:20px}
+  .wm-preview canvas{display:block;max-width:100%;height:auto;margin:0 auto}
+
+  .wm-hidden{display:none !important}
+
+  .wm-controls{}
+  .wm-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+  .wm-row label{font-size:var(--fs-xs);font-weight:600;color:var(--text-secondary);min-width:50px}
+  .wm-row .val{font-size:var(--fs-xs);font-weight:600;color:var(--accent);min-width:36px;text-align:right}
+  .wm-row input[type="text"]{flex:1;min-width:180px}
+  .wm-row input[type="color"]{width:36px;height:32px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);cursor:pointer;padding:2px}
+  .wm-row input[type="range"]{flex:1;min-width:80px}
+
+  /* Position grid */
+  .wm-pos-grid{display:inline-grid;grid-template-columns:repeat(3,32px);grid-template-rows:repeat(3,32px);gap:3px;border:1px solid var(--border);border-radius:var(--radius);padding:3px;background:var(--bg-card)}
+  .wm-pos-cell{border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;cursor:pointer;transition:all var(--dur) var(--ease)}
+  .wm-pos-cell:hover{border-color:var(--border-hover)}
+  .wm-pos-cell.active{background:var(--accent);border-color:var(--accent)}
+
+  .wm-logo-preview{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);object-fit:contain;background:var(--bg-card)}
+  @media(max-width:640px){
+    .wm-row{flex-direction:column;align-items:stretch;gap:8px}
+    .wm-row label{min-width:auto}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav"></nav>
+
+<main class="container page">
+  <div class="page-header">
+    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
+    <h1>💧 水印工具</h1>
+    <p>添加文字或图片水印，保护你的作品</p>
+  </div>
+
+  <div class="wm-wrap">
+    <!-- Dropzone -->
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <div class="dropzone-title">拖拽或点击上传图片</div>
+      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+    </div>
+
+    <!-- Editor (shown after upload) -->
+    <div id="editorArea" class="wm-hidden">
+      <!-- Preview -->
+      <div class="wm-preview"><canvas id="previewCanvas"></canvas></div>
+
+      <!-- Tabs -->
+      <div class="wm-tabs">
+        <button class="wm-tab active" data-mode="text">文字水印</button>
+        <button class="wm-tab" data-mode="image">Logo 水印</button>
+      </div>
+
+      <!-- Text watermark controls -->
+      <div class="wm-controls" id="textControls">
+        <div class="wm-row">
+          <label>文字</label>
+          <input type="text" class="input" id="wmText" value="DevKit HQ" placeholder="输入水印文字">
+        </div>
+        <div class="wm-row">
+          <label>字号</label>
+          <input type="range" id="wmFontSize" min="12" max="180" value="48">
+          <span class="val" id="wmFontSizeVal">48px</span>
+        </div>
+        <div class="wm-row">
+          <label>颜色</label>
+          <input type="color" id="wmColor" value="#ffffff">
+        </div>
+        <div class="wm-row">
+          <label>透明度</label>
+          <input type="range" id="wmOpacity" min="5" max="100" value="50">
+          <span class="val" id="wmOpacityVal">50%</span>
+        </div>
+      </div>
+
+      <!-- Image watermark controls -->
+      <div class="wm-controls wm-hidden" id="imageControls">
+        <div class="wm-row">
+          <label>Logo</label>
+          <button class="btn btn-secondary btn-sm" id="logoUploadBtn">选择 Logo 图片</button>
+          <input type="file" id="logoInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+          <img class="wm-logo-preview wm-hidden" id="logoPreview" alt="Logo preview">
+          <span id="logoName" style="font-size:var(--fs-xs);color:var(--text-tertiary)"></span>
+        </div>
+        <div class="wm-row">
+          <label>缩放</label>
+          <input type="range" id="wmLogoScale" min="5" max="100" value="25">
+          <span class="val" id="wmLogoScaleVal">25%</span>
+        </div>
+        <div class="wm-row">
+          <label>透明度</label>
+          <input type="range" id="wmLogoOpacity" min="5" max="100" value="60">
+          <span class="val" id="wmLogoOpacityVal">60%</span>
+        </div>
+      </div>
+
+      <!-- Position selector (shared) -->
+      <div class="wm-row" style="margin-bottom:20px">
+        <label>位置</label>
+        <div class="wm-pos-grid" id="posGrid">
+          <button class="wm-pos-cell" data-pos="top-left"></button>
+          <button class="wm-pos-cell" data-pos="top-center"></button>
+          <button class="wm-pos-cell" data-pos="top-right"></button>
+          <button class="wm-pos-cell" data-pos="center-left"></button>
+          <button class="wm-pos-cell active" data-pos="center"></button>
+          <button class="wm-pos-cell" data-pos="center-right"></button>
+          <button class="wm-pos-cell" data-pos="bottom-left"></button>
+          <button class="wm-pos-cell" data-pos="bottom-center"></button>
+          <button class="wm-pos-cell" data-pos="bottom-right"></button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-sm justify-between">
+        <button class="btn btn-ghost btn-sm" id="newImageBtn">重新选择图片</button>
+        <button class="btn btn-primary" id="downloadBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载带水印图片
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer" data-i="footer">© 2026 DevKit HQ · 所有工具均在浏览器本地运行 · 隐私安全</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => { renderNav('image'); applyI18n(); });
+
+// ===== State =====
+let image = null;
+let origFileName = 'image.png';
+let logoImage = null;
+let mode = 'text'; // 'text' | 'image'
+let position = 'center'; // top-left, top-center, ..., bottom-right
+const PADDING = 24; // px padding from edges (image space)
+
+// ===== DOM refs =====
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+const editorArea = document.getElementById('editorArea');
+const previewCanvas = document.getElementById('previewCanvas');
+const pctx = previewCanvas.getContext('2d');
+
+// ===== Upload main image =====
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0]); });
+document.getElementById('uploadBtn').addEventListener('click', () => fi.click());
+fi.addEventListener('change', e => { if (e.target.files[0]) { loadImage(e.target.files[0]); fi.value = ''; } });
+
+function loadImage(file) {
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  origFileName = file.name;
+  const img = new Image();
+  img.onload = () => {
+    image = img;
+    setupPreview();
+    dz.classList.add('wm-hidden');
+    editorArea.classList.remove('wm-hidden');
+    renderPreview();
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+function setupPreview() {
+  const maxW = 640, maxH = 400;
+  let dw = image.naturalWidth, dh = image.naturalHeight;
+  if (dw > maxW || dh > maxH) {
+    const s = Math.min(maxW / dw, maxH / dh);
+    dw = Math.round(dw * s);
+    dh = Math.round(dh * s);
+  }
+  previewCanvas.width = dw;
+  previewCanvas.height = dh;
+  previewCanvas.style.width = dw + 'px';
+  previewCanvas.style.height = dh + 'px';
+}
+
+// ===== Logo upload =====
+document.getElementById('logoUploadBtn').addEventListener('click', () => document.getElementById('logoInput').click());
+document.getElementById('logoInput').addEventListener('change', e => {
+  if (!e.target.files[0]) return;
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      logoImage = img;
+      document.getElementById('logoPreview').src = reader.result;
+      document.getElementById('logoPreview').classList.remove('wm-hidden');
+      document.getElementById('logoName').textContent = file.name;
+      if (image) renderPreview();
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+// ===== Mode tabs =====
+document.querySelectorAll('.wm-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.wm-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    mode = tab.dataset.mode;
+    document.getElementById('textControls').classList.toggle('wm-hidden', mode !== 'text');
+    document.getElementById('imageControls').classList.toggle('wm-hidden', mode !== 'image');
+    if (image) renderPreview();
+  });
+});
+
+// ===== Position grid =====
+document.getElementById('posGrid').addEventListener('click', e => {
+  const cell = e.target.closest('.wm-pos-cell');
+  if (!cell) return;
+  document.querySelectorAll('.wm-pos-cell').forEach(c => c.classList.remove('active'));
+  cell.classList.add('active');
+  position = cell.dataset.pos;
+  if (image) renderPreview();
+});
+
+// ===== Control inputs — text =====
+const wmText = document.getElementById('wmText');
+const wmFontSize = document.getElementById('wmFontSize');
+const wmColor = document.getElementById('wmColor');
+const wmOpacity = document.getElementById('wmOpacity');
+
+wmText.addEventListener('input', () => { if (image && mode === 'text') renderPreview(); });
+wmFontSize.addEventListener('input', function() {
+  document.getElementById('wmFontSizeVal').textContent = this.value + 'px';
+  if (image && mode === 'text') renderPreview();
+});
+wmColor.addEventListener('input', () => { if (image && mode === 'text') renderPreview(); });
+wmOpacity.addEventListener('input', function() {
+  document.getElementById('wmOpacityVal').textContent = this.value + '%';
+  if (image && mode === 'text') renderPreview();
+});
+
+// ===== Control inputs — image =====
+const wmLogoScale = document.getElementById('wmLogoScale');
+const wmLogoOpacity = document.getElementById('wmLogoOpacity');
+
+wmLogoScale.addEventListener('input', function() {
+  document.getElementById('wmLogoScaleVal').textContent = this.value + '%';
+  if (image && mode === 'image') renderPreview();
+});
+wmLogoOpacity.addEventListener('input', function() {
+  document.getElementById('wmLogoOpacityVal').textContent = this.value + '%';
+  if (image && mode === 'image') renderPreview();
+});
+
+// ===== Compute watermark position =====
+function getTextPos(imgW, imgH, fontSize) {
+  const pad = PADDING;
+  const [vPos, hPos] = position.split('-');
+  let x, y;
+  if (hPos === 'left') x = pad;
+  else if (hPos === 'center') x = imgW / 2;
+  else x = imgW - pad;
+  if (vPos === 'top') y = pad + fontSize * 0.8;
+  else if (vPos === 'center') y = imgH / 2;
+  else y = imgH - pad;
+  return { x, y, align: hPos, baseline: vPos === 'top' ? 'top' : vPos === 'center' ? 'middle' : 'bottom' };
+}
+
+function getImagePos(imgW, imgH, logoW, logoH) {
+  const pad = PADDING;
+  const [vPos, hPos] = position.split('-');
+  let x, y;
+  if (hPos === 'left') x = pad;
+  else if (hPos === 'center') x = (imgW - logoW) / 2;
+  else x = imgW - pad - logoW;
+  if (vPos === 'top') y = pad;
+  else if (vPos === 'center') y = (imgH - logoH) / 2;
+  else y = imgH - pad - logoH;
+  return { x, y };
+}
+
+// ===== Render preview =====
+function renderPreview() {
+  if (!image) return;
+  const cw = previewCanvas.width, ch = previewCanvas.height;
+  pctx.clearRect(0, 0, cw, ch);
+  pctx.drawImage(image, 0, 0, cw, ch);
+
+  if (mode === 'text') {
+    drawTextWatermark(pctx, cw, ch);
+  } else {
+    if (logoImage) drawImageWatermark(pctx, cw, ch);
+  }
+}
+
+function drawTextWatermark(ctx, imgW, imgH) {
+  const text = wmText.value.trim();
+  if (!text) return;
+  const fontSize = parseInt(wmFontSize.value);
+  const color = wmColor.value;
+  const opacity = parseInt(wmOpacity.value) / 100;
+  const pos = getTextPos(imgW, imgH, fontSize);
+
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
+  ctx.fillStyle = color;
+  ctx.textAlign = pos.align;
+  ctx.textBaseline = pos.baseline;
+
+  // Subtle text shadow for readability
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = fontSize * 0.15;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+
+  ctx.fillText(text, pos.x, pos.y);
+  ctx.restore();
+}
+
+function drawImageWatermark(ctx, imgW, imgH) {
+  if (!logoImage) return;
+  const scale = parseInt(wmLogoScale.value) / 100;
+  const opacity = parseInt(wmLogoOpacity.value) / 100;
+  const refDim = Math.min(imgW, imgH);
+  let lw = refDim * scale;
+  let lh = (logoImage.naturalHeight / logoImage.naturalWidth) * lw;
+  if (lh > refDim * scale) {
+    lh = refDim * scale;
+    lw = (logoImage.naturalWidth / logoImage.naturalHeight) * lh;
+  }
+  lw = Math.round(lw); lh = Math.round(lh);
+  if (lw < 8 || lh < 8) return;
+
+  const pos = getImagePos(imgW, imgH, lw, lh);
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.drawImage(logoImage, pos.x, pos.y, lw, lh);
+  ctx.restore();
+}
+
+// ===== Download =====
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!image) return;
+  const c = document.createElement('canvas');
+  c.width = image.naturalWidth;
+  c.height = image.naturalHeight;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(image, 0, 0);
+
+  if (mode === 'text') {
+    const text = wmText.value.trim();
+    if (!text) { toast('请输入水印文字'); return; }
+    const fontSize = Math.round(parseInt(wmFontSize.value) * (image.naturalWidth / previewCanvas.width));
+    const color = wmColor.value;
+    const opacity = parseInt(wmOpacity.value) / 100;
+    const [vPos, hPos] = position.split('-');
+    const pad = Math.round(PADDING * (image.naturalWidth / previewCanvas.width));
+    let x, y;
+    if (hPos === 'left') { x = pad; ctx.textAlign = 'left'; }
+    else if (hPos === 'center') { x = c.width / 2; ctx.textAlign = 'center'; }
+    else { x = c.width - pad; ctx.textAlign = 'right'; }
+    if (vPos === 'top') { y = pad + fontSize * 0.8; ctx.textBaseline = 'top'; }
+    else if (vPos === 'center') { y = c.height / 2; ctx.textBaseline = 'middle'; }
+    else { y = c.height - pad; ctx.textBaseline = 'bottom'; }
+
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
+    ctx.fillStyle = color;
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = fontSize * 0.15;
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  } else {
+    if (!logoImage) { toast('请先选择 Logo 图片'); return; }
+    const scale = parseInt(wmLogoScale.value) / 100;
+    const opacity = parseInt(wmLogoOpacity.value) / 100;
+    const refDim = Math.min(c.width, c.height);
+    let lw = refDim * scale;
+    let lh = (logoImage.naturalHeight / logoImage.naturalWidth) * lw;
+    if (lh > refDim * scale) { lh = refDim * scale; lw = (logoImage.naturalWidth / logoImage.naturalHeight) * lh; }
+    lw = Math.round(lw); lh = Math.round(lh);
+
+    const pad = Math.round(PADDING * (image.naturalWidth / previewCanvas.width));
+    const [vPos, hPos] = position.split('-');
+    let x, y;
+    if (hPos === 'left') x = pad;
+    else if (hPos === 'center') x = (c.width - lw) / 2;
+    else x = c.width - pad - lw;
+    if (vPos === 'top') y = pad;
+    else if (vPos === 'center') y = (c.height - lh) / 2;
+    else y = c.height - pad - lh;
+
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.drawImage(logoImage, x, y, lw, lh);
+    ctx.restore();
+  }
+
+  c.toBlob(blob => {
+    if (!blob) { toast('导出失败'); return; }
+    const ext = origFileName.match(/\.(jpe?g|png|webp)$/i)?.[1] || 'png';
+    const name = origFileName.replace(/\.[^.]+$/, '') + '-watermarked.' + ext;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('下载完成');
+  }, 'image/png');
+});
+
+// ===== New image =====
+document.getElementById('newImageBtn').addEventListener('click', () => {
+  image = null; logoImage = null;
+  editorArea.classList.add('wm-hidden');
+  dz.classList.remove('wm-hidden');
+  document.getElementById('logoPreview').classList.add('wm-hidden');
+  document.getElementById('logoName').textContent = '';
+});
+
+// ===== Resize =====
+window.addEventListener('resize', debounce(() => { if (image) { setupPreview(); renderPreview(); } }, 200));
+</script>
+</body>
+</html>

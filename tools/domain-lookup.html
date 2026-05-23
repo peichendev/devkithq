@@ -45,15 +45,27 @@
 @keyframes bgGlobe2{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 @keyframes bgRing{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.2);opacity:0}}
 
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.16}
+.bg-demo .globe{position:absolute;top:50%;left:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:1.5px solid rgba(245,158,11,0.3);box-shadow:0 0 60px rgba(245,158,11,0.06);animation:bgGlobe 10s ease-in-out infinite}
+.bg-demo .meridian{position:absolute;top:50%;left:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:1px solid transparent;border-left-color:rgba(245,158,11,0.2);animation:bgMeridian 8s linear infinite}
+.bg-demo .m2{width:240px;height:240px;margin:-120px 0 0 -120px;animation-duration:6s;animation-direction:reverse}
+.bg-demo .m3{width:180px;height:180px;margin:-90px 0 0 -90px;animation-duration:10s;border-right-color:rgba(245,158,11,0.15);border-left-color:transparent}
+.bg-demo .pulse{position:absolute;top:50%;left:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:1.5px solid rgba(245,158,11,0.4);animation:bgPulse 3s ease-out infinite}
+.bg-demo .p2{animation-delay:1s}
+.bg-demo .p3{animation-delay:2s}
+@keyframes bgGlobe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes bgMeridian{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+@keyframes bgPulse{0%{transform:scale(1);opacity:0.5}100%{transform:scale(2);opacity:0}}
+
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="globe g1"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="globe g2"></div></div>
+<div class="bg-demo"><div class="globe"></div><div class="meridian m1"></div><div class="meridian m2"></div><div class="meridian m3"></div><div class="pulse p1"></div><div class="pulse p2"></div><div class="pulse p3"></div></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="globe g2"></div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
   <div class="page-header">
-    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
     <h1><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="4" ry="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg> <span data-i="toolDomain">域名查询</span></h1>
     <p data-i="taglineDomain">查询域名 WHOIS 信息，判断能否注册</p>
   </div>

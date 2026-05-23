@@ -49,16 +49,24 @@
 .bg-demo .dot:nth-child(5){background:#a855f7;bottom:25%;right:25%;animation-delay:-8s}
 @keyframes bgPal{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.4)}50%{transform:translate(-25px,40px) scale(0.8)}75%{transform:translate(-35px,-20px) scale(1.2)}}
 
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.22}
+.bg-demo .orb{position:absolute;width:260px;height:260px;border-radius:50%;filter:blur(70px);animation:bgOrb 12s ease-in-out infinite}
+.bg-demo .o1{background:rgba(239,68,68,0.5);top:-8%;left:-5%;animation-delay:0s}
+.bg-demo .o2{background:rgba(245,158,11,0.45);top:40%;right:-10%;animation-delay:-3s}
+.bg-demo .o3{background:rgba(59,130,246,0.5);bottom:-10%;left:15%;animation-delay:-6s}
+.bg-demo .o4{background:rgba(168,85,247,0.4);top:20%;left:50%;animation-delay:-9s}
+@keyframes bgOrb{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(50px,-30px) scale(1.15)}50%{transform:translate(-25px,45px) scale(0.9)}75%{transform:translate(-40px,-20px) scale(1.08)}}
+
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+<div class="bg-demo"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
 
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
   <div class="page-header">
-    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
     <h1><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px"><circle cx="12" cy="12" r="10"/><circle cx="7" cy="8" r="2" fill="#ef4444" stroke="none"/><circle cx="12" cy="5" r="2" fill="#f59e0b" stroke="none"/><circle cx="17" cy="8" r="2" fill="#10b981" stroke="none"/><circle cx="7" cy="16" r="2" fill="#3b82f6" stroke="none"/><circle cx="17" cy="16" r="2" fill="#a855f7" stroke="none"/><line x1="7" y1="8" x2="12" y2="5"/><line x1="12" y1="5" x2="17" y2="8"/></svg> <span data-i="toolPalette">色彩提取</span></h1>
     <p data-i="taglinePalette">上传图片，自动提取主色调与配色方案</p>
   </div>

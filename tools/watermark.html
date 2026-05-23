@@ -45,16 +45,27 @@
 .bg-demo .wm3{bottom:20%;left:25%;font-size:56px;animation-delay:-5s}
 @keyframes bgWm{0%,100%{opacity:0.15;transform:translate(-50%,-50%) rotate(-15deg) scale(0.95)}50%{opacity:0.5;transform:translate(-50%,-50%) rotate(-15deg) scale(1.05)}}
 
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.15}
+.bg-demo .layer{position:absolute;border:1.5px solid rgba(244,63,94,0.25);border-radius:16px}
+.bg-demo .l1{top:18%;left:12%;width:280px;height:180px;transform:rotate(-3deg);animation:bgLayer1 10s ease-in-out infinite;background:rgba(244,63,94,0.03)}
+.bg-demo .l2{top:35%;right:10%;width:240px;height:160px;transform:rotate(5deg);animation:bgLayer2 9s ease-in-out infinite 1s;background:rgba(244,63,94,0.03)}
+.bg-demo .l3{bottom:20%;left:18%;width:300px;height:190px;transform:rotate(-1deg);animation:bgLayer3 11s ease-in-out infinite 0.5s;background:rgba(244,63,94,0.03)}
+.bg-demo .l4{top:50%;left:40%;width:200px;height:140px;transform:rotate(8deg);animation:bgLayer4 8s ease-in-out infinite 2s;background:rgba(244,63,94,0.04)}
+@keyframes bgLayer1{0%,100%{transform:rotate(-3deg) translate(0,0)}50%{transform:rotate(-1deg) translate(15px,-10px)}}
+@keyframes bgLayer2{0%,100%{transform:rotate(5deg) translate(0,0)}50%{transform:rotate(3deg) translate(-20px,15px)}}
+@keyframes bgLayer3{0%,100%{transform:rotate(-1deg) translate(0,0)}50%{transform:rotate(-3deg) translate(10px,20px)}}
+@keyframes bgLayer4{0%,100%{transform:rotate(8deg) translate(0,0)}50%{transform:rotate(5deg) translate(-15px,-15px)}}
+
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="wm wm1">SAMPLE</div><div class="wm wm2">LOGO</div><div class="wm wm3">WATERMARK</div></div>
+<div class="bg-demo"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="layer l4"></div></div><div class="wm wm2">LOGO</div><div class="wm wm3">WATERMARK</div></div>
 
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
   <div class="page-header">
-    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
     <h1><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6 21l6-6"/><line x1="6" y1="21" x2="8" y2="18"/></svg> <span data-i="toolWatermark">水印工具</span></h1>
     <p data-i="taglineWatermark">添加文字或图片水印，保护你的作品</p>
   </div>

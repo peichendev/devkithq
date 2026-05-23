@@ -31,16 +31,25 @@
 .bg-demo .char:nth-child(8){bottom:12%;right:35%;animation-delay:-5.6s}
 @keyframes bgChar{0%,100%{opacity:0.15;transform:translateY(0)}50%{opacity:0.5;transform:translateY(-20px)}}
 
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.14}
+.bg-demo .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(6,182,212,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.08) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,black 30%,transparent 70%)}
+.bg-demo .diamond{position:absolute;width:50px;height:50px;border:1.5px solid rgba(6,182,212,0.35);transform:rotate(45deg);animation:bgDiamond 8s ease-in-out infinite}
+.bg-demo .dm1{top:20%;left:15%;animation-delay:0s}
+.bg-demo .dm2{top:50%;right:12%;animation-delay:-2s}
+.bg-demo .dm3{bottom:18%;left:20%;animation-delay:-4s}
+.bg-demo .dm4{top:30%;right:25%;animation-delay:-6s}
+@keyframes bgDiamond{0%,100%{transform:rotate(45deg) scale(1);opacity:0.3}50%{transform:rotate(65deg) scale(0.8);opacity:0.7}}
+
 </style>
 </head>
 <body>
-<div class="bg-demo"><span class="char">Q</span><span class="char">W</span><span class="char">9</span><span class="char">Z</span><span class="char">+</span><span class="char">x</span><span class="char">M</span><span class="char">=</span></div>
+<div class="bg-demo"><div class="grid"></div><div class="diamond dm1"></div><div class="diamond dm2"></div><div class="diamond dm3"></div><div class="diamond dm4"></div></div>
 
 <nav class="nav" id="nav"></nav>
 
 <main class="container">
   <div class="page-header">
-    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
     <h1><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px"><rect x="3" y="4" width="18" height="16" rx="2"/><rect x="7" y="8" width="4" height="3" rx="0.5"/><rect x="13" y="8" width="4" height="8" rx="0.5"/><rect x="7" y="13" width="4" height="3" rx="0.5"/></svg> <span data-i="toolBase64">Base64 编解码</span></h1>
     <p data-i="taglineBase64">文本 ↔ Base64 在线编解码，支持中文等 Unicode 字符</p>
   </div>

@@ -55,16 +55,27 @@
 @keyframes bgComp3{0%,100%{transform:scale(0.5)}50%{transform:scale(0.2)}}
 @keyframes bgCompArr{0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-30px);opacity:1}}
 
+
+/* === Background Animation === */
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.18}
+.bg-demo .ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1.5px solid rgba(59,130,246,0.4);transform:translate(-50%,-50%)}
+.bg-demo .r1{width:520px;height:520px;animation:bgRing1 12s linear infinite}
+.bg-demo .r2{width:400px;height:400px;border-style:dashed;animation:bgRing2 10s linear infinite reverse}
+.bg-demo .r3{width:280px;height:280px;border-width:2px;border-color:rgba(59,130,246,0.6);animation:bgRing1 8s linear infinite}
+.bg-demo .dot{position:absolute;width:6px;height:6px;background:#3b82f6;border-radius:50%;box-shadow:0 0 16px 4px rgba(59,130,246,0.6);top:50%;left:50%;margin-left:200px;margin-top:0;animation:bgOrbit 6s linear infinite}
+@keyframes bgRing1{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes bgRing2{0%{transform:translate(-50%,-50%) rotate(0deg) scale(1)}50%{transform:translate(-50%,-50%) rotate(180deg) scale(1.06)}100%{transform:translate(-50%,-50%) rotate(360deg) scale(1)}}
+@keyframes bgOrbit{0%{transform:rotate(0deg) translateX(200px) rotate(0deg)}100%{transform:rotate(360deg) translateX(200px) rotate(-360deg)}}
+
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="cr1"></div><div class="cr2"></div><div class="cr3"></div><div class="arr"></div></div>
+<div class="bg-demo"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="dot"></div></div><div class="cr2"></div><div class="cr3"></div><div class="arr"></div></div>
 
 <nav class="nav" id="nav"></nav>
 
 <main class="container">
   <div class="page-header">
-    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
     <h1><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px"><path d="M4 15l1 4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2l1-4"/><rect x="7" y="3" width="10" height="12" rx="1"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="12" y1="6" x2="12" y2="10"/></svg> <span data-i="toolCompress">图片压缩</span></h1>
     <p data-i="taglineCompress">智能压缩 JPEG / PNG / WebP，所有处理在浏览器本地完成</p>
   </div>

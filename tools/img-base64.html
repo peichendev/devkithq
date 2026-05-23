@@ -25,15 +25,28 @@
 .bg-demo .line:nth-child(6){top:85%;left:0;width:40%;animation-delay:3s}
 @keyframes bgB64{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
 
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.16}
+.bg-demo .bar{position:absolute;bottom:0;width:3px;background:linear-gradient(to top,rgba(20,184,166,0.5),transparent);border-radius:2px 2px 0 0;animation:bgBar 3s ease-in-out infinite}
+.bg-demo .b1{left:8%;height:40%;animation-delay:0s}
+.bg-demo .b2{left:18%;height:65%;animation-delay:0.3s}
+.bg-demo .b3{left:28%;height:30%;animation-delay:0.6s}
+.bg-demo .b4{left:38%;height:55%;animation-delay:0.9s}
+.bg-demo .b5{left:48%;height:70%;animation-delay:1.2s}
+.bg-demo .b6{left:58%;height:35%;animation-delay:1.5s}
+.bg-demo .b7{left:68%;height:50%;animation-delay:1.8s}
+.bg-demo .b8{left:78%;height:60%;animation-delay:2.1s}
+.bg-demo .b9{left:88%;height:45%;animation-delay:2.4s}
+@keyframes bgBar{0%,100%{transform:scaleY(0.6);opacity:0.4}50%{transform:scaleY(1.2);opacity:0.8}}
+
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+<div class="bg-demo"><div class="bar b1"></div><div class="bar b2"></div><div class="bar b3"></div><div class="bar b4"></div><div class="bar b5"></div><div class="bar b6"></div><div class="bar b7"></div><div class="bar b8"></div><div class="bar b9"></div></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
   <div class="page-header">
-    <a href="../index.html" class="btn btn-ghost btn-sm" style="margin-bottom:12px" data-i="backHome">← 返回首页</a>
     <h1><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:8px"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h12"/><path d="M6 12h8"/><path d="M6 16h10"/><circle cx="18" cy="8" r="1" fill="currentColor" stroke="none"/></svg> <span data-i="toolImgBase64">图片转 Base64</span></h1>
     <p data-i="taglineImgBase64">将图片编码为 Base64 文本，可直接嵌入 HTML/CSS</p>
   </div>

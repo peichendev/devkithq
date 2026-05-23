@@ -99,6 +99,112 @@
 
 .footer-home{margin-top:48px}
 
+
+/* ===== Card Demo Animations ===== */
+.tcard-demo{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity 0.55s cubic-bezier(0.25,0.1,0.25,1);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tcard:hover .tcard-demo{opacity:0.12}
+.tcard-demo>*{position:absolute}
+
+/* --- Compress: pulsing shrinking box --- */
+.demo-compress .ring1{width:160px;height:120px;border:2px solid #3b82f6;border-radius:12px;animation:dcompress1 2.4s ease-in-out infinite}
+.demo-compress .ring2{width:120px;height:90px;border:2px solid #3b82f6;border-radius:10px;animation:dcompress2 2.4s ease-in-out infinite}
+.demo-compress .ring3{width:80px;height:60px;border:2px solid #3b82f6;border-radius:8px;animation:dcompress3 2.4s ease-in-out infinite}
+.demo-compress .arrow1{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:12px solid #3b82f6;animation:dcompressArr 2.4s ease-in-out infinite}
+@keyframes dcompress1{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(0.55);opacity:1}}
+@keyframes dcompress2{0%,100%{transform:scale(0.75);opacity:0.5}50%{transform:scale(0.35);opacity:1}}
+@keyframes dcompress3{0%,100%{transform:scale(0.5);opacity:0.5}50%{transform:scale(0.15);opacity:1}}
+@keyframes dcompressArr{0%,100%{transform:translateY(0);opacity:0}50%{transform:translateY(-14px);opacity:1}}
+
+/* --- Convert: format labels swapping --- */
+.demo-convert .fmt1,.demo-convert .fmt2{font-family:var(--font-mono);font-size:13px;font-weight:700;color:#6366f1;padding:8px 14px;border:1.5px solid #6366f1;border-radius:8px;background:rgba(99,102,241,0.06)}
+.demo-convert .fmt1{animation:dfmt1 3s ease-in-out infinite}
+.demo-convert .fmt2{animation:dfmt2 3s ease-in-out infinite}
+.demo-convert .fmtArr{color:#6366f1;font-size:20px;animation:dfmtArr 3s ease-in-out infinite}
+@keyframes dfmt1{0%,100%{transform:translate(-40px,0);opacity:1}50%{transform:translate(40px,0);opacity:0.2}}
+@keyframes dfmt2{0%,100%{transform:translate(40px,0);opacity:0.2}50%{transform:translate(-40px,0);opacity:1}}
+@keyframes dfmtArr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(180deg)}}
+
+/* --- Resize: crop frame scaling --- */
+.demo-resize .cropFrame{width:130px;height:90px;border:2px dashed #a855f7;border-radius:2px;animation:dcropFrame 3s ease-in-out infinite}
+.demo-resize .cropCorner{width:10px;height:10px;border:2px solid #a855f7;border-radius:2px;background:rgba(168,85,247,0.15)}
+.demo-resize .cropCorner.tl{top:0;left:0;animation:dcropTL 3s ease-in-out infinite}
+.demo-resize .cropCorner.br{bottom:0;right:0;animation:dcropBR 3s ease-in-out infinite}
+@keyframes dcropFrame{0%,100%{transform:scale(1)}50%{transform:scale(0.65)}}
+@keyframes dcropTL{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,15px)}}
+@keyframes dcropBR{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,-15px)}}
+
+/* --- Watermark: text overlay on image placeholder --- */
+.demo-watermark .wmImg{width:140px;height:90px;border:2px solid #f43f5e;border-radius:8px;background:rgba(244,63,94,0.04);animation:dwmImg 3s ease-in-out infinite}
+.demo-watermark .wmTxt{color:#f43f5e;font-size:14px;font-weight:700;letter-spacing:2px;opacity:0;transform:rotate(-20deg);animation:dwmTxt 3s ease-in-out infinite}
+@keyframes dwmImg{0%,100%{opacity:0.3}50%{opacity:0.8}}
+@keyframes dwmTxt{0%,100%{opacity:0;transform:rotate(-20deg) scale(0.8)}50%{opacity:1;transform:rotate(-20deg) scale(1.1)}}
+
+/* --- Img2Base64: scrolling code characters --- */
+.demo-imgbase64{flex-direction:column;gap:3px}
+.demo-imgbase64 .b64line{height:3px;background:#14b8a6;border-radius:2px;animation:db64line 2s linear infinite}
+.demo-imgbase64 .b64line:nth-child(1){width:70%;animation-delay:0s}
+.demo-imgbase64 .b64line:nth-child(2){width:85%;animation-delay:0.3s}
+.demo-imgbase64 .b64line:nth-child(3){width:60%;animation-delay:0.6s}
+.demo-imgbase64 .b64line:nth-child(4){width:90%;animation-delay:0.9s}
+.demo-imgbase64 .b64line:nth-child(5){width:75%;animation-delay:1.2s}
+@keyframes db64line{0%{transform:translateX(-100%);opacity:0}50%{opacity:1}100%{transform:translateX(100%);opacity:0}}
+
+/* --- Palette: floating color circles --- */
+.demo-palette .palDot{width:18px;height:18px;border-radius:50%;animation:dpadot 4s ease-in-out infinite}
+.demo-palette .palDot:nth-child(1){background:#ef4444;animation-delay:0s}
+.demo-palette .palDot:nth-child(2){background:#f59e0b;animation-delay:-0.6s}
+.demo-palette .palDot:nth-child(3){background:#10b981;animation-delay:-1.2s}
+.demo-palette .palDot:nth-child(4){background:#3b82f6;animation-delay:-1.8s}
+.demo-palette .palDot:nth-child(5){background:#a855f7;animation-delay:-2.4s}
+@keyframes dpadot{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-20px) scale(1.5)}50%{transform:translate(-20px,25px) scale(0.8)}75%{transform:translate(-30px,-15px) scale(1.3)}}
+
+/* --- JSON: indentation lines expanding --- */
+.demo-json .jsonLine{height:2.5px;background:#10b981;border-radius:2px;position:absolute;animation:djson 2.5s ease-in-out infinite}
+.demo-json .jsonLine:nth-child(1){width:50px;top:40%;left:25%;animation-delay:0s}
+.demo-json .jsonLine:nth-child(2){width:70px;top:50%;left:25%;animation-delay:0.2s}
+.demo-json .jsonLine:nth-child(3){width:60px;top:60%;left:25%;animation-delay:0.4s}
+.demo-json .jsonLine:nth-child(4){width:85px;top:50%;left:25%;animation-delay:0.6s}
+@keyframes djson{0%,100%{transform:translateX(0);opacity:0.4}50%{transform:translateX(20px);opacity:1}}
+
+/* --- Base64: character shifting --- */
+.demo-base64{font-family:var(--font-mono);font-size:11px;color:#06b6d4;letter-spacing:3px;flex-direction:row;gap:0}
+.demo-base64 span{animation:db64char 3s steps(1) infinite}
+.demo-base64 span:nth-child(1){animation-delay:0s}
+.demo-base64 span:nth-child(2){animation-delay:0.3s}
+.demo-base64 span:nth-child(3){animation-delay:0.6s}
+.demo-base64 span:nth-child(4){animation-delay:0.9s}
+.demo-base64 span:nth-child(5){animation-delay:1.2s}
+.demo-base64 span:nth-child(6){animation-delay:1.5s}
+@keyframes db64char{0%,20%{content:"A"}21%,40%{content:"Z"}41%,60%{content:"9"}61%,80%{content:"+"}81%,100%{content:"="}}
+
+/* --- URL: percent encoding --- */
+.demo-url .urlPct{font-family:var(--font-mono);font-size:16px;font-weight:700;color:#3b82f6;opacity:0;animation:durl 2.5s ease-in-out infinite}
+.demo-url .urlPct:nth-child(1){animation-delay:0s}
+.demo-url .urlPct:nth-child(2){animation-delay:0.5s}
+.demo-url .urlPct:nth-child(3){animation-delay:1s}
+@keyframes durl{0%,100%{opacity:0;transform:translateY(10px)}20%{opacity:1;transform:translateY(0)}40%{opacity:0;transform:translateY(-10px)}}
+
+/* --- Timestamp: clock with rotating hand --- */
+.demo-timestamp .tsClock{width:70px;height:70px;border:2px solid #6366f1;border-radius:50%;position:relative}
+.demo-timestamp .tsHand{position:absolute;width:2px;height:22px;background:#6366f1;bottom:50%;left:50%;transform-origin:bottom center;border-radius:1px;animation:dtsHand 4s linear infinite}
+.demo-timestamp .tsDot{position:absolute;width:6px;height:6px;background:#6366f1;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
+@keyframes dtsHand{0%{transform:translate(-50%,0) rotate(0deg)}100%{transform:translate(-50%,0) rotate(360deg)}}
+
+/* --- Markdown: typing cursor + text markdown symbols --- */
+.demo-markdown .mdChars{font-family:var(--font-mono);font-size:14px;color:#a855f7;letter-spacing:1px}
+.demo-markdown .mdCursor{width:2px;height:16px;background:#a855f7;animation:dmdCursor 0.8s step-end infinite}
+.demo-markdown .mdHash{font-size:20px;font-weight:800;color:#a855f7;animation:dmdHash 2s ease-in-out infinite}
+@keyframes dmdCursor{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes dmdHash{0%,100%{opacity:0.3;transform:translateY(3px)}50%{opacity:1;transform:translateY(0)}}
+
+/* --- Domain: globe with scanning rings --- */
+.demo-domain .domGlobe{width:60px;height:60px;border:2px solid #f59e0b;border-radius:50%;animation:ddomGlobe 3s ease-in-out infinite}
+.demo-domain .domRing{position:absolute;border:1.5px solid #f59e0b;border-radius:50%;animation:ddomRing 2.5s ease-out infinite}
+.demo-domain .domRing:nth-child(2){animation-delay:0.8s}
+.demo-domain .domRing:nth-child(3){animation-delay:1.6s}
+@keyframes ddomGlobe{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.08);opacity:1}}
+@keyframes ddomRing{0%{width:60px;height:60px;opacity:0.8}100%{width:140px;height:140px;opacity:0}}
+
 @media(max-width:768px){
   .grid{grid-template-columns:1fr}
   .home-hero{padding:60px 0 48px}
@@ -133,9 +239,9 @@
       </a>
     </div>
     <div class="home-stats">
-      <div class="home-stat"><strong>12</strong> 款工具</div>
-      <div class="home-stat"><strong>100%</strong> 浏览器本地</div>
-      <div class="home-stat"><strong>0</strong> 数据上传</div>
+      <div class="home-stat"><strong>12</strong> <span data-i="statTools">款工具</span></div>
+      <div class="home-stat"><strong>100%</strong> <span data-i="statLocal">浏览器本地</span></div>
+      <div class="home-stat"><strong>0</strong> <span data-i="statPrivacy">数据上传</span></div>
     </div>
   </div>
 </section>
@@ -158,62 +264,68 @@
   <div class="grid">
     <a href="tools/compress.html" class="tcard ic-blue">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-compress"><div class="ring1"></div><div class="ring2"></div><div class="ring3"></div><div class="arrow1" style="top:42%;left:48%"></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 15l1 4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2l1-4"/><rect x="7" y="3" width="10" height="12" rx="1"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="12" y1="6" x2="12" y2="10"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>图片压缩</h3><p data-i="descCompress">智能压缩 JPEG / PNG / WebP，批量处理，本地完成</p></div>
+      <div class="tcard-body"><h3 data-i="toolCompress">图片压缩</h3><p data-i="descCompress">智能压缩 JPEG / PNG / WebP，批量处理，本地完成</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/convert.html" class="tcard ic-indigo">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-convert"><span class="fmt1" style="position:static">PNG</span><span class="fmtArr" style="position:static">↔</span><span class="fmt2" style="position:static">WEBP</span></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="8" height="7" rx="1.5"/><rect x="14" y="13" width="8" height="7" rx="1.5"/><path d="M10 7.5h3.5"/><polyline points="17 7.5 14 4 11 7.5"/><path d="M14 16.5H10.5"/><polyline points="7 16.5 10 20 13 16.5"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>格式转换</h3><p data-i="descConvert">图片格式互转 JPEG ↔ PNG ↔ WebP，可调质量与尺寸</p></div>
+      <div class="tcard-body"><h3 data-i="toolConvert">格式转换</h3><p data-i="descConvert">图片格式互转 JPEG ↔ PNG ↔ WebP，可调质量与尺寸</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/resize.html" class="tcard ic-purple">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-resize" style="align-items:center;justify-content:center"><div class="cropFrame" style="position:relative"><div class="cropCorner tl"></div><div class="cropCorner br"></div></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="6" width="18" height="12" rx="2"/><rect x="4" y="7" width="5" height="4" stroke-dasharray="2 2"/><line x1="15" y1="18" x2="20" y2="13"/><polyline points="18 11 21 14 15 20"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>裁剪缩放</h3><p data-i="descResize">自由裁剪和缩放图片，可视化操作</p></div>
+      <div class="tcard-body"><h3 data-i="toolResize">裁剪缩放</h3><p data-i="descResize">自由裁剪和缩放图片，可视化操作</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/watermark.html" class="tcard ic-rose">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-watermark"><div class="wmImg"></div><span class="wmTxt">LOGO</span></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6 21l6-6"/><line x1="6" y1="21" x2="8" y2="18"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>水印工具</h3><p data-i="descWatermark">添加文字或图片水印，保护你的作品</p></div>
+      <div class="tcard-body"><h3 data-i="toolWatermark">水印工具</h3><p data-i="descWatermark">添加文字或图片水印，保护你的作品</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/img-base64.html" class="tcard ic-teal">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-imgbase64"><div class="b64line"></div><div class="b64line"></div><div class="b64line"></div><div class="b64line"></div><div class="b64line"></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h12"/><path d="M6 12h8"/><path d="M6 16h10"/><circle cx="18" cy="8" r="1" fill="currentColor" stroke="none"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>图片转 Base64</h3><p data-i="descImgBase64">将图片编码为 Base64 文本，一键复制</p></div>
+      <div class="tcard-body"><h3 data-i="toolImgBase64">图片转 Base64</h3><p data-i="descImgBase64">将图片编码为 Base64 文本，一键复制</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/palette.html" class="tcard ic-amber">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-palette"><div class="palDot"></div><div class="palDot"></div><div class="palDot"></div><div class="palDot"></div><div class="palDot"></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><circle cx="7" cy="8" r="2" fill="#ef4444" stroke="none"/><circle cx="12" cy="5" r="2" fill="#f59e0b" stroke="none"/><circle cx="17" cy="8" r="2" fill="#10b981" stroke="none"/><circle cx="7" cy="16" r="2" fill="#3b82f6" stroke="none"/><circle cx="17" cy="16" r="2" fill="#a855f7" stroke="none"/><line x1="7" y1="8" x2="12" y2="5"/><line x1="12" y1="5" x2="17" y2="8"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="7" y1="16" x2="17" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>色彩提取</h3><p data-i="descPalette">上传图片提取主色调，生成配色方案</p></div>
+      <div class="tcard-body"><h3 data-i="toolPalette">色彩提取</h3><p data-i="descPalette">上传图片提取主色调，生成配色方案</p></div>
       <span class="tcard-arrow">→</span>
     </a>
   </div>
@@ -235,62 +347,68 @@
   <div class="grid">
     <a href="tools/json-formatter.html" class="tcard ic-green">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-json"><div class="jsonLine"></div><div class="jsonLine"></div><div class="jsonLine"></div><div class="jsonLine"></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h14"/><circle cx="18" cy="12" r="3"/><line x1="18" y1="11" x2="18" y2="13"/><line x1="17" y1="12" x2="19" y2="12"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>JSON 格式化</h3><p data-i="descJson">粘贴 JSON 一键美化，错误自动标注行号</p></div>
+      <div class="tcard-body"><h3 data-i="toolJson">JSON 格式化</h3><p data-i="descJson">粘贴 JSON 一键美化，错误自动标注行号</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/base64-codec.html" class="tcard ic-cyan">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-base64"><span>A</span><span>G</span><span>9</span><span>z</span><span>+</span><span>=</span></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="16" rx="2"/><rect x="7" y="8" width="4" height="3" rx="0.5"/><rect x="13" y="8" width="4" height="8" rx="0.5"/><rect x="7" y="13" width="4" height="3" rx="0.5"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>Base64 编解码</h3><p data-i="descBase64">文本 ↔ Base64 编解码，支持中文</p></div>
+      <div class="tcard-body"><h3 data-i="toolBase64">Base64 编解码</h3><p data-i="descBase64">文本 ↔ Base64 编解码，支持中文</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/url-codec.html" class="tcard ic-blue">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-url"><span class="urlPct">%20</span><span class="urlPct">%3C</span><span class="urlPct">%2F</span></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/><circle cx="8" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1" fill="currentColor" stroke="none"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>URL 编解码</h3><p data-i="descUrl">URL 编解码，encodeURI / decodeURI</p></div>
+      <div class="tcard-body"><h3 data-i="toolUrl">URL 编解码</h3><p data-i="descUrl">URL 编解码，encodeURI / decodeURI</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/timestamp.html" class="tcard ic-indigo">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-timestamp"><div class="tsClock"><div class="tsHand"></div><div class="tsDot"></div></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><line x1="12" y1="12" x2="16" y2="14"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="2" y1="12" x2="4" y2="12"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>时间戳转换</h3><p data-i="descTimestamp">Unix 时间戳 ↔ 人类可读日期时间互转</p></div>
+      <div class="tcard-body"><h3 data-i="toolTimestamp">时间戳转换</h3><p data-i="descTimestamp">Unix 时间戳 ↔ 人类可读日期时间互转</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/markdown.html" class="tcard ic-purple">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-markdown"><span class="mdHash">#</span><span class="mdChars">text</span><span class="mdCursor"></span></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/><line x1="16" y1="17" x2="16" y2="17"/><polyline points="8 10 10 8 12 10"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>Markdown 预览</h3><p data-i="descMarkdown">实时预览 Markdown 渲染效果，分栏编辑</p></div>
+      <div class="tcard-body"><h3 data-i="toolMarkdown">Markdown 预览</h3><p data-i="descMarkdown">实时预览 Markdown 渲染效果，分栏编辑</p></div>
       <span class="tcard-arrow">→</span>
     </a>
     <a href="tools/domain-lookup.html" class="tcard ic-amber">
       <div class="card-glow"></div><div class="card-bg"></div>
+      <div class="tcard-demo demo-domain"><div class="domGlobe"></div><div class="domRing"></div><div class="domRing"></div><div class="domRing"></div></div>
       <div class="tcard-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="4" ry="10"/><line x1="2" y1="12" x2="22" y2="12"/><circle cx="12" cy="5" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/>
         </svg>
       </div>
-      <div class="tcard-body"><h3>域名查询</h3><p data-i="descDomain">查询域名 WHOIS 信息，判断是否可注册</p></div>
+      <div class="tcard-body"><h3 data-i="toolDomain">域名查询</h3><p data-i="descDomain">查询域名 WHOIS 信息，判断是否可注册</p></div>
       <span class="tcard-arrow">→</span>
     </a>
   </div>
@@ -308,32 +426,32 @@
         <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="url(#dkGrad2)"/><defs><linearGradient id="dkGrad2" x1="0" y1="0" x2="28" y2="28"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs><text x="14" y="19.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="15" font-weight="800" fill="#fff" letter-spacing="-0.5">DK</text></svg>
         <strong style="font-size:var(--fs-base);color:var(--text)">DevKit HQ</strong>
       </div>
-      <p>为开发者和设计师打造的免费在线工具箱。所有工具均在浏览器本地运行，数据不会上传到任何服务器。</p>
+      <p data-i="footerAboutText">为开发者和设计师打造的免费在线工具箱。所有工具均在浏览器本地运行，数据不会上传到任何服务器。</p>
     </div>
     <div>
-      <h4>图片工具</h4>
+      <h4 data-i="footerImageTools">图片工具</h4>
       <ul>
-        <li><a href="tools/compress.html">图片压缩</a></li>
-        <li><a href="tools/convert.html">格式转换</a></li>
-        <li><a href="tools/resize.html">裁剪缩放</a></li>
-        <li><a href="tools/watermark.html">水印工具</a></li>
-        <li><a href="tools/img-base64.html">图片转 Base64</a></li>
-        <li><a href="tools/palette.html">色彩提取</a></li>
+        <li><a href="tools/compress.html" data-i="toolCompress">图片压缩</a></li>
+        <li><a href="tools/convert.html" data-i="toolConvert">格式转换</a></li>
+        <li><a href="tools/resize.html" data-i="toolResize">裁剪缩放</a></li>
+        <li><a href="tools/watermark.html" data-i="toolWatermark">水印工具</a></li>
+        <li><a href="tools/img-base64.html" data-i="toolImgBase64">图片转 Base64</a></li>
+        <li><a href="tools/palette.html" data-i="toolPalette">色彩提取</a></li>
       </ul>
     </div>
     <div>
-      <h4>开发工具</h4>
+      <h4 data-i="footerDevTools">开发工具</h4>
       <ul>
-        <li><a href="tools/json-formatter.html">JSON 格式化</a></li>
-        <li><a href="tools/base64-codec.html">Base64 编解码</a></li>
-        <li><a href="tools/url-codec.html">URL 编解码</a></li>
-        <li><a href="tools/timestamp.html">时间戳转换</a></li>
-        <li><a href="tools/markdown.html">Markdown 预览</a></li>
-        <li><a href="tools/domain-lookup.html">域名查询</a></li>
+        <li><a href="tools/json-formatter.html" data-i="toolJson">JSON 格式化</a></li>
+        <li><a href="tools/base64-codec.html" data-i="toolBase64">Base64 编解码</a></li>
+        <li><a href="tools/url-codec.html" data-i="toolUrl">URL 编解码</a></li>
+        <li><a href="tools/timestamp.html" data-i="toolTimestamp">时间戳转换</a></li>
+        <li><a href="tools/markdown.html" data-i="toolMarkdown">Markdown 预览</a></li>
+        <li><a href="tools/domain-lookup.html" data-i="toolDomain">域名查询</a></li>
       </ul>
     </div>
     <div>
-      <h4>关于</h4>
+      <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
         <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
@@ -341,8 +459,8 @@
     </div>
   </div>
   <div class="rich-footer-bottom">
-    <span>© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span>Made with <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
+    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
   </div>
 </footer>
 

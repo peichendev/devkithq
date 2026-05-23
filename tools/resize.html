@@ -36,9 +36,20 @@
     .rz-row{gap:6px}
     .rz-dim input{width:64px}
   }
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
+.bg-demo .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(168,85,247,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.15) 1px,transparent 1px);background-size:80px 80px;animation:bgGrid 10s ease-in-out infinite}
+.bg-demo .frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:200px;border:2.5px dashed #a855f7;border-radius:4px;animation:bgFrame 6s ease-in-out infinite}
+.bg-demo .corner{position:absolute;width:16px;height:16px;border:2.5px solid #a855f7;background:rgba(168,85,247,0.08)}
+.bg-demo .tl{top:-8px;left:-8px;border-right:none;border-bottom:none}
+.bg-demo .br{bottom:-8px;right:-8px;border-left:none;border-top:none}
+@keyframes bgGrid{0%,100%{opacity:0.4}50%{opacity:0.8}}
+@keyframes bgFrame{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(0.7)}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><div class="grid"></div><div class="frame"><div class="corner tl"></div><div class="corner br"></div></div></div>
 
 <nav class="nav" id="nav"></nav>
 

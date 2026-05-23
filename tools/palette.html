@@ -39,9 +39,20 @@
   @media(max-width:400px){
     .pl-grid{grid-template-columns:repeat(2,1fr)}
   }
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.1}
+.bg-demo .dot{position:absolute;width:60px;height:60px;border-radius:50%;filter:blur(30px);animation:bgPal 10s ease-in-out infinite}
+.bg-demo .dot:nth-child(1){background:#ef4444;top:20%;left:15%;animation-delay:0s}
+.bg-demo .dot:nth-child(2){background:#f59e0b;top:50%;right:10%;animation-delay:-2s}
+.bg-demo .dot:nth-child(3){background:#10b981;bottom:15%;left:20%;animation-delay:-4s}
+.bg-demo .dot:nth-child(4){background:#3b82f6;top:10%;right:20%;animation-delay:-6s}
+.bg-demo .dot:nth-child(5){background:#a855f7;bottom:25%;right:25%;animation-delay:-8s}
+@keyframes bgPal{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.4)}50%{transform:translate(-25px,40px) scale(0.8)}75%{transform:translate(-35px,-20px) scale(1.2)}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
 
 <nav class="nav" id="nav"></nav>
 

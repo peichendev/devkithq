@@ -32,9 +32,23 @@
   .dl-examples{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
   .dl-example{padding:4px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:var(--fs-xs);font-family:var(--font-mono);cursor:pointer;transition:all var(--dur) var(--ease)}
   .dl-example:hover{border-color:var(--accent);color:var(--accent)}
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
+.bg-demo .globe{position:absolute;width:180px;height:180px;border:2.5px solid #f59e0b;border-radius:50%}
+.bg-demo .g1{top:10%;left:8%;animation:bgGlobe1 8s ease-in-out infinite}
+.bg-demo .g2{bottom:12%;right:6%;width:130px;height:130px;animation:bgGlobe2 10s ease-in-out infinite 1s}
+.bg-demo .ring{position:absolute;border:2px solid #f59e0b;border-radius:50%;animation:bgRing 4s ease-out infinite}
+.bg-demo .r1{top:10%;left:8%;width:180px;height:180px;animation-delay:0s}
+.bg-demo .r2{top:10%;left:8%;width:180px;height:180px;animation-delay:1.3s}
+.bg-demo .r3{top:10%;left:8%;width:180px;height:180px;animation-delay:2.6s}
+@keyframes bgGlobe1{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes bgGlobe2{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes bgRing{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.2);opacity:0}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><div class="globe g1"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="globe g2"></div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">

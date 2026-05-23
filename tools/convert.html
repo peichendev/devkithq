@@ -18,9 +18,20 @@
   .cv-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:20px}
   .cv-controls .mc-g{flex:1;min-width:100px}
   .cv-controls label{font-size:var(--fs-xs);color:var(--text-secondary);font-weight:600}
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.07}
+.bg-demo .fmt{position:absolute;font-family:var(--font-mono);font-size:32px;font-weight:800;color:#6366f1;padding:14px 24px;border:2.5px solid #6366f1;border-radius:12px;background:rgba(99,102,241,0.04)}
+.bg-demo .fmt1{top:18%;left:10%;animation:bgFmt1 8s ease-in-out infinite}
+.bg-demo .fmt2{bottom:22%;right:10%;animation:bgFmt2 8s ease-in-out infinite}
+.bg-demo .fmtArr{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;color:#6366f1;animation:bgFmtArr 8s ease-in-out infinite}
+@keyframes bgFmt1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,20px)}}
+@keyframes bgFmt2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-20px)}}
+@keyframes bgFmtArr{0%,100%{transform:translate(-50%,-50%) rotate(0deg)}50%{transform:translate(-50%,-50%) rotate(180deg)}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><div class="fmt fmt1">JPEG</div><div class="fmt fmt2">WEBP</div><div class="fmtArr">↔</div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">

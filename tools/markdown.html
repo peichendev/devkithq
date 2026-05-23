@@ -44,9 +44,21 @@
     .md-editor{min-height:300px}
     .md-preview{min-height:300px}
   }
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
+.bg-demo .sym{position:absolute;font-family:var(--font-mono);font-weight:800;color:#a855f7;animation:bgMd 7s ease-in-out infinite}
+.bg-demo .sym:nth-child(1){top:15%;left:8%;font-size:48px;animation-delay:0s}
+.bg-demo .sym:nth-child(2){top:30%;right:10%;font-size:36px;animation-delay:-1.2s}
+.bg-demo .sym:nth-child(3){top:50%;left:6%;font-size:42px;animation-delay:-2.4s}
+.bg-demo .sym:nth-child(4){top:65%;right:12%;font-size:32px;animation-delay:-3.6s}
+.bg-demo .sym:nth-child(5){top:80%;left:15%;font-size:38px;animation-delay:-4.8s}
+.bg-demo .sym:nth-child(6){top:22%;left:60%;font-size:28px;animation-delay:-6s}
+@keyframes bgMd{0%,100%{opacity:0.12;transform:translateY(0)}50%{opacity:0.45;transform:translateY(-12px)}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><span class="sym">#</span><span class="sym">**</span><span class="sym">```</span><span class="sym">></span><span class="sym">*</span><span class="sym">~~</span></div>
 
 <nav class="nav" id="nav"></nav>
 

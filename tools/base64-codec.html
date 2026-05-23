@@ -18,9 +18,23 @@
   .swap-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;font-size:18px;transition:all var(--dur) var(--ease);margin:0 auto}
   .swap-icon:hover{border-color:var(--accent);background:var(--accent-glow);transform:rotate(180deg)}
   @media(max-width:640px){.tool-actions .btn{flex:1;justify-content:center}}
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
+.bg-demo .char{position:absolute;font-family:var(--font-mono);font-size:28px;font-weight:700;color:#06b6d4;animation:bgChar 7s ease-in-out infinite}
+.bg-demo .char:nth-child(1){top:15%;left:10%;animation-delay:0s}
+.bg-demo .char:nth-child(2){top:30%;right:12%;animation-delay:-0.8s}
+.bg-demo .char:nth-child(3){top:50%;left:8%;animation-delay:-1.6s}
+.bg-demo .char:nth-child(4){top:65%;right:15%;animation-delay:-2.4s}
+.bg-demo .char:nth-child(5){top:80%;left:18%;animation-delay:-3.2s}
+.bg-demo .char:nth-child(6){top:22%;left:50%;animation-delay:-4s}
+.bg-demo .char:nth-child(7){top:55%;right:30%;animation-delay:-4.8s}
+.bg-demo .char:nth-child(8){bottom:12%;right:35%;animation-delay:-5.6s}
+@keyframes bgChar{0%,100%{opacity:0.15;transform:translateY(0)}50%{opacity:0.5;transform:translateY(-20px)}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><span class="char">Q</span><span class="char">W</span><span class="char">9</span><span class="char">Z</span><span class="char">+</span><span class="char">x</span><span class="char">M</span><span class="char">=</span></div>
 
 <nav class="nav" id="nav"></nav>
 

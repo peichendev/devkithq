@@ -22,9 +22,22 @@
     .tool-toolbar{flex-direction:column}
     .tool-toolbar .btn{width:100%;justify-content:center}
   }
+
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
+.bg-demo .brace{position:absolute;font-family:var(--font-mono);font-size:80px;font-weight:200;color:#10b981;animation:bgBrace 6s ease-in-out infinite}
+.bg-demo .brace:nth-child(1){top:12%;left:8%;animation-delay:0s}
+.bg-demo .brace:nth-child(2){bottom:15%;right:8%;animation-delay:-3s}
+.bg-demo .indent{position:absolute;left:12%;width:3px;background:#10b981;border-radius:2px;animation:bgIndent 5s ease-in-out infinite}
+.bg-demo .indent:nth-child(3){top:30%;height:60px;animation-delay:0s}
+.bg-demo .indent:nth-child(4){top:42%;height:80px;animation-delay:0.6s}
+.bg-demo .indent:nth-child(5){top:54%;height:50px;animation-delay:1.2s}
+@keyframes bgBrace{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:0.5;transform:scale(1.1)}}
+@keyframes bgIndent{0%,100%{opacity:0.2;transform:translateX(0)}50%{opacity:0.5;transform:translateX(30px)}}
+
 </style>
 </head>
 <body>
+<div class="bg-demo"><div class="brace">{</div><div class="brace">}</div><div class="indent"></div><div class="indent"></div><div class="indent"></div></div>
 
 <nav class="nav" id="nav"></nav>
 

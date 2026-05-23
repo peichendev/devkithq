@@ -224,6 +224,33 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 .footer a{color:var(--text-secondary)}
 .footer a:hover{color:var(--text)}
 
+/* ----- Rich Footer ----- */
+.rich-footer{padding:64px 0 40px;border-top:1px solid var(--border)}
+.rich-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:var(--max-width);margin:0 auto;padding:0 24px}
+.rich-footer h4{font-size:var(--fs-sm);font-weight:700;margin-bottom:14px;color:var(--text)}
+.rich-footer ul{list-style:none;padding:0}
+.rich-footer li{margin-bottom:7px}
+.rich-footer li a{color:var(--text-secondary);font-size:var(--fs-sm);transition:color var(--dur) var(--ease)}
+.rich-footer li a:hover{color:var(--accent)}
+.rich-footer .about p{color:var(--text-secondary);font-size:var(--fs-sm);line-height:1.7;margin-bottom:12px}
+.rich-footer .about .footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.rich-footer-bottom{max-width:var(--max-width);margin:32px auto 0;padding:16px 24px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:var(--fs-xs);color:var(--text-tertiary)}
+.rich-footer-bottom a{color:var(--text-tertiary)}
+.rich-footer-bottom a:hover{color:var(--text)}
+
+/* ----- Ad Slot ----- */
+.ad-slot{max-width:720px;margin:24px auto;text-align:center}
+.ad-placeholder{border:1px dashed var(--border);border-radius:var(--radius);padding:20px;color:var(--text-tertiary);font-size:var(--fs-xs);transition:border-color var(--dur) var(--ease)}
+.ad-placeholder:hover{border-color:var(--text-tertiary)}
+
+@media(max-width:768px){
+  .rich-footer-grid{grid-template-columns:1fr 1fr;gap:28px}
+}
+@media(max-width:480px){
+  .rich-footer-grid{grid-template-columns:1fr}
+  .rich-footer-bottom{flex-direction:column;text-align:center}
+}
+
 /* ----- Code block (for JSON etc) ----- */
 .code-block{background:#1a1a1e;border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--font-mono);font-size:var(--fs-sm);line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:480px;overflow-y:auto}
 [data-theme="light"] .code-block{background:#f0f0f2}

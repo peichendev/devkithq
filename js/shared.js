@@ -141,8 +141,15 @@ function renderNav(currentPage) {
   nav.innerHTML = `
     <div class="nav-inner">
       <a href="/" class="nav-logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${dark ? '#3b82f6' : '#0071e3'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="7" fill="url(#dkGrad)"/>
+          <defs>
+            <linearGradient id="dkGrad" x1="0" y1="0" x2="28" y2="28">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <text x="14" y="19.5" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="15" font-weight="800" fill="#fff" letter-spacing="-0.5">DK</text>
         </svg>
         DevKit
       </a>

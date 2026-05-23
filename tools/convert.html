@@ -19,17 +19,14 @@
   .cv-controls .mc-g{flex:1;min-width:100px}
   .cv-controls label{font-size:var(--fs-xs);color:var(--text-secondary);font-weight:600}
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.07}
-.bg-demo .fmt{position:absolute;font-family:var(--font-mono);font-size:32px;font-weight:800;color:#6366f1;padding:14px 24px;border:2.5px solid #6366f1;border-radius:12px;background:rgba(99,102,241,0.04)}
-.bg-demo .fmt1{top:18%;left:10%;animation:bgFmt1 8s ease-in-out infinite}
-.bg-demo .fmt2{bottom:22%;right:10%;animation:bgFmt2 8s ease-in-out infinite}
-.bg-demo .fmtArr{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;color:#6366f1;animation:bgFmtArr 8s ease-in-out infinite}
-@keyframes bgFmt1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,20px)}}
-@keyframes bgFmt2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-20px)}}
-@keyframes bgFmtArr{0%,100%{transform:translate(-50%,-50%) rotate(0deg)}50%{transform:translate(-50%,-50%) rotate(180deg)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.16}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.2}
+.bg-demo .fmt{position:absolute;width:140px;height:90px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:18px;font-weight:800;color:#fff}
+.bg-demo .f1{top:20%;left:10%;background:rgba(99,102,241,0.35);animation:bgCvt1 7s ease-in-out infinite}
+.bg-demo .f2{top:45%;right:12%;background:rgba(99,102,241,0.3);animation:bgCvt2 7s ease-in-out infinite 0.3s}
+.bg-demo .f3{bottom:15%;left:25%;background:rgba(99,102,241,0.25);animation:bgCvt3 7s ease-in-out infinite 0.6s}
+@keyframes bgCvt1{0%,100%{transform:translate(0,0) rotate(0deg);border-radius:14px}33%{transform:translate(60px,30px) rotate(5deg);border-radius:30px}66%{transform:translate(-20px,-20px) rotate(-3deg);border-radius:20px}}
+@keyframes bgCvt2{0%,100%{transform:translate(0,0) rotate(0deg);border-radius:14px}33%{transform:translate(-50px,-20px) rotate(-5deg);border-radius:30px}66%{transform:translate(30px,25px) rotate(3deg);border-radius:20px}}
+@keyframes bgCvt3{0%,100%{transform:translate(0,0) rotate(0deg);border-radius:14px}33%{transform:translate(40px,-30px) rotate(4deg);border-radius:30px}66%{transform:translate(-30px,20px) rotate(-2deg);border-radius:20px}}
 .bg-demo .geo{position:absolute;top:50%;left:50%}
 .bg-demo .hex{width:200px;height:200px;margin:-100px 0 0 -100px;border:2px solid rgba(99,102,241,0.35);border-radius:40px;animation:bgHex 10s ease-in-out infinite}
 .bg-demo .dia{width:150px;height:150px;margin:-75px 0 0 -75px;border:2px solid rgba(99,102,241,0.35);transform:rotate(45deg);border-radius:28px;animation:bgDia 8s ease-in-out infinite reverse}
@@ -41,7 +38,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="geo hex"></div><div class="geo dia"></div><div class="geo cir"></div></div><div class="fmt fmt2">WEBP</div><div class="fmtArr">↔</div></div>
+<div class="bg-demo"><div class="fmt f1">JPEG</div><div class="fmt f2">PNG</div><div class="fmt f3">WebP</div></div></div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
@@ -128,7 +125,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 <div class="toast" id="toast"></div>

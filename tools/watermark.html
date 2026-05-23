@@ -39,14 +39,19 @@
     .wm-row label{min-width:auto}
   }
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
-.bg-demo .wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);font-size:72px;font-weight:900;color:#f43f5e;letter-spacing:12px;white-space:nowrap;animation:bgWm 8s ease-in-out infinite}
-.bg-demo .wm2{top:25%;left:60%;font-size:48px;animation-delay:-3s}
-.bg-demo .wm3{bottom:20%;left:25%;font-size:56px;animation-delay:-5s}
-@keyframes bgWm{0%,100%{opacity:0.15;transform:translate(-50%,-50%) rotate(-15deg) scale(0.95)}50%{opacity:0.5;transform:translate(-50%,-50%) rotate(-15deg) scale(1.05)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.15}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.18}
+.bg-demo .panel{position:absolute;width:200px;height:140px;background:rgba(244,63,94,0.12);border-radius:12px;border:1.5px solid rgba(244,63,94,0.2)}
+.bg-demo .p1{top:15%;left:8%;animation:bgWmPan1 8s ease-in-out infinite}
+.bg-demo .p2{top:35%;right:10%;animation:bgWmPan2 8s ease-in-out infinite 0.5s}
+.bg-demo .p3{bottom:15%;left:20%;animation:bgWmPan3 8s ease-in-out infinite 1s}
+.bg-demo .mark{position:absolute;color:#f43f5e;font-size:28px;font-weight:900;letter-spacing:4px;opacity:0.5;transform:rotate(-15deg);animation:bgWmMark 6s ease-in-out infinite}
+.bg-demo .m1{top:22%;left:12%;animation-delay:0s}
+.bg-demo .m2{top:42%;right:16%;animation-delay:-2s}
+.bg-demo .m3{bottom:22%;left:26%;animation-delay:-4s}
+@keyframes bgWmPan1{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-10px)}}
+@keyframes bgWmPan2{0%,100%{transform:translate(0,0)}50%{transform:translate(-15px,15px)}}
+@keyframes bgWmPan3{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,20px)}}
+@keyframes bgWmMark{0%,100%{opacity:0.2}50%{opacity:0.6}}
 .bg-demo .layer{position:absolute;border:1.5px solid rgba(244,63,94,0.25);border-radius:16px}
 .bg-demo .l1{top:18%;left:12%;width:280px;height:180px;transform:rotate(-3deg);animation:bgLayer1 10s ease-in-out infinite;background:rgba(244,63,94,0.03)}
 .bg-demo .l2{top:35%;right:10%;width:240px;height:160px;transform:rotate(5deg);animation:bgLayer2 9s ease-in-out infinite 1s;background:rgba(244,63,94,0.03)}
@@ -60,7 +65,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="layer l4"></div></div><div class="wm wm2">LOGO</div><div class="wm wm3">WATERMARK</div></div>
+<div class="bg-demo"><div class="panel p1"></div><div class="panel p2"></div><div class="panel p3"></div><div class="mark m1">SAMPLE</div><div class="mark m2">LOGO</div><div class="mark m3">© 2026</div></div></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -210,7 +215,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 <div class="toast" id="toast"></div>

@@ -71,7 +71,6 @@
 .tcard:hover .card-glow{opacity:0.5}
 .tcard .card-bg{position:absolute;inset:1px;border-radius:calc(var(--radius-lg) - 2px);background:var(--bg);z-index:-1}
 .tcard:hover{border-color:transparent;transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(59,130,246,0.3)}
-.tcard:hover .tcard-arrow{opacity:1;transform:translate(0,-50%)}
 /* Icon container */
 .tcard-icon{flex-shrink:0;width:48px;height:48px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all 0.35s var(--ease)}
 .tcard:hover .tcard-icon{transform:scale(1.08)}
@@ -80,7 +79,6 @@
 .tcard-body h3{font-size:var(--fs-base);font-weight:600;margin-bottom:3px;transition:color 0.25s var(--ease)}
 .tcard:hover .tcard-body h3{color:var(--accent)}
 .tcard-body p{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.5}
-.tcard-arrow{position:absolute;right:20px;top:50%;transform:translate(-8px,-50%);color:var(--accent);font-size:18px;opacity:0;transition:all 0.35s var(--ease);z-index:1}
 
 /* Icon color themes per card */
 .tcard.ic-blue .tcard-icon{background:rgba(59,130,246,0.12);color:#3b82f6}
@@ -273,7 +271,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolCompress">图片压缩</h3><p data-i="descCompress">智能压缩 JPEG / PNG / WebP，批量处理，本地完成</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/convert.html" class="tcard ic-indigo">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -284,7 +282,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolConvert">格式转换</h3><p data-i="descConvert">图片格式互转 JPEG ↔ PNG ↔ WebP，可调质量与尺寸</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/resize.html" class="tcard ic-purple">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -295,7 +293,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolResize">裁剪缩放</h3><p data-i="descResize">自由裁剪和缩放图片，可视化操作</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/watermark.html" class="tcard ic-rose">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -306,7 +304,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolWatermark">水印工具</h3><p data-i="descWatermark">添加文字或图片水印，保护你的作品</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/img-base64.html" class="tcard ic-teal">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -317,7 +315,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolImgBase64">图片转 Base64</h3><p data-i="descImgBase64">将图片编码为 Base64 文本，一键复制</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/palette.html" class="tcard ic-amber">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -328,7 +326,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolPalette">色彩提取</h3><p data-i="descPalette">上传图片提取主色调，生成配色方案</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
   </div>
 </section>
@@ -356,7 +354,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolJson">JSON 格式化</h3><p data-i="descJson">粘贴 JSON 一键美化，错误自动标注行号</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/base64-codec.html" class="tcard ic-cyan">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -367,7 +365,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolBase64">Base64 编解码</h3><p data-i="descBase64">文本 ↔ Base64 编解码，支持中文</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/url-codec.html" class="tcard ic-blue">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -378,7 +376,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolUrl">URL 编解码</h3><p data-i="descUrl">URL 编解码，encodeURI / decodeURI</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/timestamp.html" class="tcard ic-indigo">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -389,7 +387,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolTimestamp">时间戳转换</h3><p data-i="descTimestamp">Unix 时间戳 ↔ 人类可读日期时间互转</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/markdown.html" class="tcard ic-purple">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -400,7 +398,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolMarkdown">Markdown 预览</h3><p data-i="descMarkdown">实时预览 Markdown 渲染效果，分栏编辑</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
     <a href="tools/domain-lookup.html" class="tcard ic-amber">
       <div class="card-glow"></div><div class="card-bg"></div>
@@ -411,7 +409,7 @@
         </svg>
       </div>
       <div class="tcard-body"><h3 data-i="toolDomain">域名查询</h3><p data-i="descDomain">查询域名 WHOIS 信息，判断是否可注册</p></div>
-      <span class="tcard-arrow">→</span>
+      
     </a>
   </div>
 </section>
@@ -462,7 +460,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 

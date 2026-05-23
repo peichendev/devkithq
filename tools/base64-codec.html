@@ -19,20 +19,15 @@
   .swap-icon:hover{border-color:var(--accent);background:var(--accent-glow);transform:rotate(180deg)}
   @media(max-width:640px){.tool-actions .btn{flex:1;justify-content:center}}
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
-.bg-demo .char{position:absolute;font-family:var(--font-mono);font-size:28px;font-weight:700;color:#06b6d4;animation:bgChar 7s ease-in-out infinite}
-.bg-demo .char:nth-child(1){top:15%;left:10%;animation-delay:0s}
-.bg-demo .char:nth-child(2){top:30%;right:12%;animation-delay:-0.8s}
-.bg-demo .char:nth-child(3){top:50%;left:8%;animation-delay:-1.6s}
-.bg-demo .char:nth-child(4){top:65%;right:15%;animation-delay:-2.4s}
-.bg-demo .char:nth-child(5){top:80%;left:18%;animation-delay:-3.2s}
-.bg-demo .char:nth-child(6){top:22%;left:50%;animation-delay:-4s}
-.bg-demo .char:nth-child(7){top:55%;right:30%;animation-delay:-4.8s}
-.bg-demo .char:nth-child(8){bottom:12%;right:35%;animation-delay:-5.6s}
-@keyframes bgChar{0%,100%{opacity:0.15;transform:translateY(0)}50%{opacity:0.5;transform:translateY(-20px)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.14}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.16}
+.bg-demo .pair{position:absolute;font-family:var(--font-mono);font-size:22px;font-weight:700;display:flex;gap:20px;animation:bgB64Pair 8s ease-in-out infinite}
+.bg-demo .orig{color:rgba(6,182,212,0.4)}
+.bg-demo .encd{color:rgba(6,182,212,0.7)}
+.bg-demo .p1{top:15%;left:12%;animation-delay:0s}
+.bg-demo .p2{top:38%;right:15%;animation-delay:-2s}
+.bg-demo .p3{bottom:22%;left:18%;animation-delay:-4s}
+.bg-demo .p4{top:55%;left:40%;animation-delay:-6s}
+@keyframes bgB64Pair{0%,100%{opacity:0.3;transform:translateY(0)}50%{opacity:0.7;transform:translateY(-12px)}}
 .bg-demo .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(6,182,212,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.08) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,black 30%,transparent 70%)}
 .bg-demo .diamond{position:absolute;width:50px;height:50px;border:1.5px solid rgba(6,182,212,0.35);transform:rotate(45deg);animation:bgDiamond 8s ease-in-out infinite}
 .bg-demo .dm1{top:20%;left:15%;animation-delay:0s}
@@ -44,7 +39,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="grid"></div><div class="diamond dm1"></div><div class="diamond dm2"></div><div class="diamond dm3"></div><div class="diamond dm4"></div></div>
+<div class="bg-demo"><div class="pair p1"><span class="orig">Hello</span><span class="encd">SGVsbG8=</span></div><div class="pair p2"><span class="orig">世界</span><span class="encd">5LiW55WM</span></div><div class="pair p3"><span class="orig">DevKit</span><span class="encd">RGV2S2l0</span></div><div class="pair p4"><span class="orig">Base64</span><span class="encd">QmFzZTY0</span></div></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -135,7 +130,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 <div class="toast" id="toast"></div>

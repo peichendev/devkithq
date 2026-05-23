@@ -15,18 +15,13 @@
   .b64-output label{display:flex;justify-content:space-between;align-items:center}
   .b64-info{display:flex;gap:16px;align-items:center;font-size:var(--fs-sm);color:var(--text-secondary);margin-top:8px}
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.08}
-.bg-demo .line{position:absolute;height:3px;background:#14b8a6;border-radius:2px;animation:bgB64 4s linear infinite}
-.bg-demo .line:nth-child(1){top:15%;left:0;width:30%;animation-delay:0s}
-.bg-demo .line:nth-child(2){top:30%;left:0;width:45%;animation-delay:0.6s}
-.bg-demo .line:nth-child(3){top:45%;left:0;width:25%;animation-delay:1.2s}
-.bg-demo .line:nth-child(4){top:60%;left:0;width:50%;animation-delay:1.8s}
-.bg-demo .line:nth-child(5){top:75%;left:0;width:35%;animation-delay:2.4s}
-.bg-demo .line:nth-child(6){top:85%;left:0;width:40%;animation-delay:3s}
-@keyframes bgB64{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.16}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.17}
+.bg-demo .stream{position:absolute;font-family:var(--font-mono);font-size:13px;color:rgba(20,184,166,0.5);white-space:nowrap;animation:bgB64Stream 12s linear infinite}
+.bg-demo .s1{top:15%;animation-delay:0s}
+.bg-demo .s2{top:35%;animation-delay:-3s}
+.bg-demo .s3{top:55%;animation-delay:-6s}
+.bg-demo .s4{top:75%;animation-delay:-9s}
+@keyframes bgB64Stream{0%{transform:translateX(-30%)}100%{transform:translateX(110%)}}
 .bg-demo .bar{position:absolute;bottom:0;width:3px;background:linear-gradient(to top,rgba(20,184,166,0.5),transparent);border-radius:2px 2px 0 0;animation:bgBar 3s ease-in-out infinite}
 .bg-demo .b1{left:8%;height:40%;animation-delay:0s}
 .bg-demo .b2{left:18%;height:65%;animation-delay:0.3s}
@@ -42,7 +37,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="bar b1"></div><div class="bar b2"></div><div class="bar b3"></div><div class="bar b4"></div><div class="bar b5"></div><div class="bar b6"></div><div class="bar b7"></div><div class="bar b8"></div><div class="bar b9"></div></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+<div class="bg-demo"><div class="stream s1">iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==</div><div class="stream s2">R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7</div><div class="stream s3">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==</div><div class="stream s4">/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/aAAgBAQAAAAAA</div></div></div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
@@ -129,7 +124,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 <div class="toast" id="toast"></div>

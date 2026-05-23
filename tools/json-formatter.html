@@ -23,19 +23,18 @@
     .tool-toolbar .btn{width:100%;justify-content:center}
   }
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
-.bg-demo .brace{position:absolute;font-family:var(--font-mono);font-size:80px;font-weight:200;color:#10b981;animation:bgBrace 6s ease-in-out infinite}
-.bg-demo .brace:nth-child(1){top:12%;left:8%;animation-delay:0s}
-.bg-demo .brace:nth-child(2){bottom:15%;right:8%;animation-delay:-3s}
-.bg-demo .indent{position:absolute;left:12%;width:3px;background:#10b981;border-radius:2px;animation:bgIndent 5s ease-in-out infinite}
-.bg-demo .indent:nth-child(3){top:30%;height:60px;animation-delay:0s}
-.bg-demo .indent:nth-child(4){top:42%;height:80px;animation-delay:0.6s}
-.bg-demo .indent:nth-child(5){top:54%;height:50px;animation-delay:1.2s}
-@keyframes bgBrace{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:0.5;transform:scale(1.1)}}
-@keyframes bgIndent{0%,100%{opacity:0.2;transform:translateX(0)}50%{opacity:0.5;transform:translateX(30px)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.15}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.17}
+.bg-demo .line{position:absolute;left:15%;height:3px;background:#10b981;border-radius:2px;animation:bgJsonLine 4s ease-in-out infinite}
+.bg-demo .l1{top:28%;width:15%;animation-delay:0s}
+.bg-demo .l2{top:36%;width:22%;animation-delay:0.2s}
+.bg-demo .l3{top:44%;width:18%;animation-delay:0.4s}
+.bg-demo .l4{top:52%;width:25%;animation-delay:0.6s}
+.bg-demo .l5{top:60%;width:20%;animation-delay:0.8s}
+.bg-demo .brace{position:absolute;font-family:var(--font-mono);font-size:100px;font-weight:100;color:rgba(16,185,129,0.35)}
+.bg-demo .b1{top:18%;left:8%;animation:bgBrace 6s ease-in-out infinite}
+.bg-demo .b2{bottom:12%;right:8%;animation:bgBrace 6s ease-in-out infinite 3s}
+@keyframes bgJsonLine{0%,100%{transform:translateX(0);opacity:0.4}50%{transform:translateX(25px);opacity:0.8}}
+@keyframes bgBrace{0%,100%{transform:scale(1);opacity:0.2}50%{transform:scale(1.08);opacity:0.45}}
 .bg-demo .brace{position:absolute;font-family:var(--font-mono);font-size:140px;font-weight:100;color:rgba(16,185,129,0.3);animation:bgBrace 8s ease-in-out infinite}
 .bg-demo .b1{top:5%;left:6%;animation-delay:0s}
 .bg-demo .b2{bottom:5%;right:6%;animation-delay:-4s}
@@ -56,7 +55,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="brace b1">{</div><div class="brace b2">}</div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><div class="dot d4"></div></div><div class="brace">}</div><div class="indent"></div><div class="indent"></div><div class="indent"></div></div>
+<div class="bg-demo"><div class="brace b1">{</div><div class="brace b2">}</div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div><div class="line l5"></div></div></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -142,7 +141,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 <div class="toast" id="toast"></div>

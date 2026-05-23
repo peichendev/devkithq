@@ -45,18 +45,16 @@
     .md-preview{min-height:300px}
   }
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
-.bg-demo .sym{position:absolute;font-family:var(--font-mono);font-weight:800;color:#a855f7;animation:bgMd 7s ease-in-out infinite}
-.bg-demo .sym:nth-child(1){top:15%;left:8%;font-size:48px;animation-delay:0s}
-.bg-demo .sym:nth-child(2){top:30%;right:10%;font-size:36px;animation-delay:-1.2s}
-.bg-demo .sym:nth-child(3){top:50%;left:6%;font-size:42px;animation-delay:-2.4s}
-.bg-demo .sym:nth-child(4){top:65%;right:12%;font-size:32px;animation-delay:-3.6s}
-.bg-demo .sym:nth-child(5){top:80%;left:15%;font-size:38px;animation-delay:-4.8s}
-.bg-demo .sym:nth-child(6){top:22%;left:60%;font-size:28px;animation-delay:-6s}
-@keyframes bgMd{0%,100%{opacity:0.12;transform:translateY(0)}50%{opacity:0.45;transform:translateY(-12px)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.14}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.15}
+.bg-demo .md{position:absolute;font-family:var(--font-mono);animation:bgMd 8s ease-in-out infinite}
+.bg-demo .md .syntax{color:rgba(168,85,247,0.5);font-weight:700}
+.bg-demo .md .text{color:rgba(168,85,247,0.25)}
+.bg-demo .m1{top:12%;left:8%;font-size:22px;animation-delay:0s}
+.bg-demo .m2{top:28%;right:10%;font-size:16px;animation-delay:-1.5s}
+.bg-demo .m3{top:48%;left:12%;font-size:14px;animation-delay:-3s}
+.bg-demo .m4{bottom:20%;right:12%;font-size:18px;animation-delay:-4.5s}
+.bg-demo .m5{top:65%;left:40%;font-size:15px;animation-delay:-6s}
+@keyframes bgMd{0%,100%{opacity:0.25;transform:translateY(0)}50%{opacity:0.6;transform:translateY(-14px)}}
 .bg-demo .sym{position:absolute;font-family:var(--font-mono);font-weight:700;color:rgba(168,85,247,0.4);animation:bgSym 8s ease-in-out infinite}
 .bg-demo .s1{top:8%;left:10%;font-size:52px;animation-delay:0s}
 .bg-demo .s2{top:20%;right:12%;font-size:38px;animation-delay:-1s}
@@ -71,7 +69,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><span class="sym s1">#</span><span class="sym s2">**</span><span class="sym s3">```</span><span class="sym s4">&gt;</span><span class="sym s5">~~</span><span class="sym s6">[ ]</span><span class="sym s7">*</span><span class="sym s8">__</span></div>
+<div class="bg-demo"><div class="md m1"><span class="syntax">#</span> <span class="text">DevKit HQ</span></div><div class="md m2"><span class="syntax">**</span><span class="text">隐私优先</span><span class="syntax">**</span></div><div class="md m3"><span class="syntax">-</span> <span class="text">浏览器本地处理</span></div><div class="md m4"><span class="syntax">></span> <span class="text">数据不上传服务器</span></div><div class="md m5"><span class="syntax">~~</span><span class="text">旧方案</span><span class="syntax">~~</span> <span class="text">新方案</span></div></div>
 
 <nav class="nav" id="nav"></nav>
 

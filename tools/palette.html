@@ -40,17 +40,14 @@
     .pl-grid{grid-template-columns:repeat(2,1fr)}
   }
 
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.1}
-.bg-demo .dot{position:absolute;width:60px;height:60px;border-radius:50%;filter:blur(30px);animation:bgPal 10s ease-in-out infinite}
-.bg-demo .dot:nth-child(1){background:#ef4444;top:20%;left:15%;animation-delay:0s}
-.bg-demo .dot:nth-child(2){background:#f59e0b;top:50%;right:10%;animation-delay:-2s}
-.bg-demo .dot:nth-child(3){background:#10b981;bottom:15%;left:20%;animation-delay:-4s}
-.bg-demo .dot:nth-child(4){background:#3b82f6;top:10%;right:20%;animation-delay:-6s}
-.bg-demo .dot:nth-child(5){background:#a855f7;bottom:25%;right:25%;animation-delay:-8s}
-@keyframes bgPal{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.4)}50%{transform:translate(-25px,40px) scale(0.8)}75%{transform:translate(-35px,-20px) scale(1.2)}}
-
-
-.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.22}
+.bg-demo{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.25}
+.bg-demo .orb{position:absolute;border-radius:50%;filter:blur(80px);animation:bgOrb 10s ease-in-out infinite}
+.bg-demo .o1{width:300px;height:300px;background:#ef4444;top:-10%;left:-5%;animation-delay:0s}
+.bg-demo .o2{width:280px;height:280px;background:#f59e0b;top:35%;right:-8%;animation-delay:-2.5s}
+.bg-demo .o3{width:320px;height:320px;background:#3b82f6;bottom:-12%;left:10%;animation-delay:-5s}
+.bg-demo .o4{width:250px;height:250px;background:#a855f7;top:15%;left:55%;animation-delay:-7.5s}
+.bg-demo .o5{width:200px;height:200px;background:#10b981;bottom:20%;right:20%;animation-delay:-3.5s}
+@keyframes bgOrb{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(60px,-40px) scale(1.2)}50%{transform:translate(-30px,50px) scale(0.85)}75%{transform:translate(-50px,-25px) scale(1.1)}}
 .bg-demo .orb{position:absolute;width:260px;height:260px;border-radius:50%;filter:blur(70px);animation:bgOrb 12s ease-in-out infinite}
 .bg-demo .o1{background:rgba(239,68,68,0.5);top:-8%;left:-5%;animation-delay:0s}
 .bg-demo .o2{background:rgba(245,158,11,0.45);top:40%;right:-10%;animation-delay:-3s}
@@ -61,7 +58,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+<div class="bg-demo"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div><div class="orb o5"></div></div></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -156,7 +153,7 @@
   </div>
   <div class="rich-footer-bottom">
     <span data-i="footerBottom">© 2026 DevKit HQ · 浏览器本地处理 · 隐私优先</span>
-    <span><span data-i="footerMadeWith">Made with</span> <a href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code</a></span>
+    <a href="https://peichen.dev" target="_blank" rel="noopener" style="color:var(--text-secondary)">Peichen.dev</a>
   </div>
 </footer>
 <div class="toast" id="toast"></div>

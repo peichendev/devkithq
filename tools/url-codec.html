@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>URL Codec — DevKit HQ</title>
+<title data-i-title="pageTitleUrl">URL Codec — DevKit HQ</title>
 <meta name="description" content="Free online URL encoder and decoder. Uses standard encodeURIComponent/decodeURIComponent. All browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -38,7 +47,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="pair p1"><span class="raw">hello world</span> → <span class="enc">hello%20world</span></div><div class="pair p2"><span class="raw">名字=张三</span> → <span class="enc">%E5%90%8D%E5%AD%97=%E5%BC%A0%E4%B8%89</span></div><div class="pair p3"><span class="raw">a+b=c</span> → <span class="enc">a%2Bb%3Dc</span></div><div class="pair p4"><span class="raw">https://devkithq.cn</span> → <span class="enc">https%3A%2F%2Fdevkithq.cn</span></div></div></div>
+<div class="bg-demo"><div class="pair p1"><span class="raw">hello world</span> → <span class="enc">hello%20world</span></div><div class="pair p2"><span class="raw">名字=张三</span> → <span class="enc">%E5%90%8D%E5%AD%97=%E5%BC%A0%E4%B8%89</span></div><div class="pair p3"><span class="raw">a+b=c</span> → <span class="enc">a%2Bb%3Dc</span></div><div class="pair p4"><span class="raw">https://devkithq.cn</span> → <span class="enc">https%3A%2F%2Fdevkithq.cn</span></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -48,7 +57,7 @@
     <p data-i="taglineUrl">URL 编码与解码，使用标准 encodeURIComponent / decodeURIComponent</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
@@ -56,33 +65,33 @@
     <div class="tool-row">
       <!-- Input -->
       <div class="tool-section">
-        <label>输入文本</label>
-        <textarea class="input" id="inputEl" placeholder="在此输入要编码的文本或 URL，或粘贴已编码的 URL 字符串进行解码..."></textarea>
+        <label data-i="urlInputLabel">输入文本</label>
+        <textarea class="input" id="inputEl" data-i-placeholder="urlInputPlaceholder" placeholder="在此输入要编码的文本或 URL，或粘贴已编码的 URL 字符串进行解码..."></textarea>
       </div>
 
       <!-- Actions -->
       <div class="tool-actions">
         <button class="btn btn-primary" id="encodeBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 19 5 12 12 5"/><polyline points="19 12 5 12"/></svg>
-          编码 Encode
+          <span data-i="encode">编码 Encode</span>
         </button>
         <button class="btn btn-secondary" id="decodeBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 5 19 12 12 19"/><polyline points="5 12 19 12"/></svg>
-          解码 Decode
+          <span data-i="decode">解码 Decode</span>
         </button>
-        <button class="btn btn-secondary" id="encodeURIBtn" style="font-size:var(--fs-xs)">编码完整 URI (encodeURI)</button>
+        <button class="btn btn-secondary" id="encodeURIBtn" style="font-size:var(--fs-xs)"><span data-i="urlEncodeFull">编码完整 URI (encodeURI)</span></button>
         <button class="btn btn-secondary" id="copyBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          复制结果
+          <span data-i="copyResult">复制结果</span>
         </button>
         <span class="spacer"></span>
-        <button class="btn btn-ghost btn-sm" id="swapBtn" title="交换输入输出">↑↓ 交换</button>
+        <button class="btn btn-ghost btn-sm" id="swapBtn" title="交换输入输出"><span data-i="swap">↑↓ 交换</span></button>
       </div>
 
       <!-- Output -->
       <div class="tool-section">
-        <label>输出结果</label>
-        <textarea class="input" id="outputEl" readonly placeholder="结果将显示在这里..." style="min-height:180px"></textarea>
+        <label data-i="urlOutputLabel">输出结果</label>
+        <textarea class="input" id="outputEl" readonly data-i-placeholder="urlOutputPlaceholder" placeholder="结果将显示在这里..." style="min-height:180px"></textarea>
       </div>
     </div>
   </div>
@@ -124,7 +133,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -150,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       outputEl.value = useURI ? encodeURI(raw) : encodeURIComponent(raw);
     } catch (e) {
-      outputEl.value = '编码失败: ' + e.message;
+      outputEl.value = t('urlEncodeFail') + ' ' + e.message;
     }
   }
 
@@ -162,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
       // Fallback: try decodeURI for full URIs
       try { outputEl.value = decodeURI(raw); } catch (e2) {
-        outputEl.value = '解码失败: 请检查输入是否为有效的 URL 编码字符串';
+        outputEl.value = t('urlDecodeFail');
       }
     }
   }
@@ -171,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('encodeURIBtn').addEventListener('click', () => encode(true));
   document.getElementById('decodeBtn').addEventListener('click', decode);
   document.getElementById('copyBtn').addEventListener('click', () => {
-    if (outputEl.value) { copyToClipboard(outputEl.value); } else { toast('没有可复制的内容'); }
+    if (outputEl.value) { copyToClipboard(outputEl.value); } else { toast(t('noContentToCopy')); }
   });
   document.getElementById('swapBtn').addEventListener('click', () => {
     const tmp = inputEl.value;

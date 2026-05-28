@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watermark Tool — DevKit HQ</title>
+<title data-i-title="pageTitleWatermark">Watermark Tool — DevKit HQ</title>
 <meta name="description" content="Add text or image watermarks to your photos. Browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -65,7 +74,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="panel p1"></div><div class="panel p2"></div><div class="panel p3"></div><div class="mark m1">SAMPLE</div><div class="mark m2">LOGO</div><div class="mark m3">© 2026</div></div></div></div>
+<div class="bg-demo"><div class="panel p1"></div><div class="panel p2"></div><div class="panel p3"></div><div class="mark m1">SAMPLE</div><div class="mark m2">LOGO</div><div class="mark m3">© 2026</div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -75,7 +84,7 @@
     <p data-i="taglineWatermark">添加文字或图片水印，保护你的作品</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
@@ -85,9 +94,9 @@
       <div class="dropzone-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </div>
-      <div class="dropzone-title">拖拽或点击上传图片</div>
-      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
-      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <div class="dropzone-title" data-i="dropzoneTitle">拖拽或点击上传图片</div>
+      <div class="dropzone-sub" data-i="dropzoneSub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn"><span data-i="selectFile">选择文件</span></button>
       <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
     </div>
 
@@ -98,27 +107,27 @@
 
       <!-- Tabs -->
       <div class="wm-tabs">
-        <button class="wm-tab active" data-mode="text">文字水印</button>
-        <button class="wm-tab" data-mode="image">Logo 水印</button>
+        <button class="wm-tab active" data-mode="text" data-i="wmTabText">文字水印</button>
+        <button class="wm-tab" data-mode="image" data-i="wmTabLogo">Logo 水印</button>
       </div>
 
       <!-- Text watermark controls -->
       <div class="wm-controls" id="textControls">
         <div class="wm-row">
-          <label>文字</label>
-          <input type="text" class="input" id="wmText" value="DevKit HQ" placeholder="输入水印文字">
+          <label data-i="wmWatermarkText">文字</label>
+          <input type="text" class="input" id="wmText" value="DevKit HQ" data-i-placeholder="wmTextPlaceholder" placeholder="输入水印文字">
         </div>
         <div class="wm-row">
-          <label>字号</label>
+          <label data-i="wmFontSize">字号</label>
           <input type="range" id="wmFontSize" min="12" max="180" value="48">
           <span class="val" id="wmFontSizeVal">48px</span>
         </div>
         <div class="wm-row">
-          <label>颜色</label>
+          <label data-i="wmColor">颜色</label>
           <input type="color" id="wmColor" value="#ffffff">
         </div>
         <div class="wm-row">
-          <label>透明度</label>
+          <label data-i="wmOpacity">透明度</label>
           <input type="range" id="wmOpacity" min="5" max="100" value="50">
           <span class="val" id="wmOpacityVal">50%</span>
         </div>
@@ -128,18 +137,18 @@
       <div class="wm-controls wm-hidden" id="imageControls">
         <div class="wm-row">
           <label>Logo</label>
-          <button class="btn btn-secondary btn-sm" id="logoUploadBtn">选择 Logo 图片</button>
+          <button class="btn btn-secondary btn-sm" id="logoUploadBtn" data-i="wmLogoSelect">选择 Logo 图片</button>
           <input type="file" id="logoInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
-          <img class="wm-logo-preview wm-hidden" id="logoPreview" alt="Logo preview">
+          <img class="wm-logo-preview wm-hidden" id="logoPreview" alt="Logo preview" data-i-alt="preview">
           <span id="logoName" style="font-size:var(--fs-xs);color:var(--text-tertiary)"></span>
         </div>
         <div class="wm-row">
-          <label>缩放</label>
+          <label data-i="wmScale">缩放</label>
           <input type="range" id="wmLogoScale" min="5" max="100" value="25">
           <span class="val" id="wmLogoScaleVal">25%</span>
         </div>
         <div class="wm-row">
-          <label>透明度</label>
+          <label data-i="wmOpacity">透明度</label>
           <input type="range" id="wmLogoOpacity" min="5" max="100" value="60">
           <span class="val" id="wmLogoOpacityVal">60%</span>
         </div>
@@ -147,7 +156,7 @@
 
       <!-- Position selector (shared) -->
       <div class="wm-row" style="margin-bottom:20px">
-        <label>位置</label>
+        <label data-i="wmPosition">位置</label>
         <div class="wm-pos-grid" id="posGrid">
           <button class="wm-pos-cell" data-pos="top-left"></button>
           <button class="wm-pos-cell" data-pos="top-center"></button>
@@ -163,10 +172,10 @@
 
       <!-- Actions -->
       <div class="flex gap-sm justify-between">
-        <button class="btn btn-ghost btn-sm" id="newImageBtn">重新选择图片</button>
+        <button class="btn btn-ghost btn-sm" id="newImageBtn" data-i="wmRechoose">重新选择图片</button>
         <button class="btn btn-primary" id="downloadBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          下载带水印图片
+          <span data-i="wmDownloadResult">下载带水印图片</span>
         </button>
       </div>
     </div>
@@ -209,7 +218,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -247,7 +256,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => fi.click())
 fi.addEventListener('change', e => { if (e.target.files[0]) { loadImage(e.target.files[0]); fi.value = ''; } });
 
 function loadImage(file) {
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast(t('unsupportedFormat')); return; }
   origFileName = file.name;
   const img = new Image();
   img.onload = () => {
@@ -445,7 +454,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
 
   if (mode === 'text') {
     const text = wmText.value.trim();
-    if (!text) { toast('请输入水印文字'); return; }
+    if (!text) { toast(t('wmNoText')); return; }
     const fontSize = Math.round(parseInt(wmFontSize.value) * (image.naturalWidth / previewCanvas.width));
     const color = wmColor.value;
     const opacity = parseInt(wmOpacity.value) / 100;
@@ -468,7 +477,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
     ctx.fillText(text, x, y);
     ctx.restore();
   } else {
-    if (!logoImage) { toast('请先选择 Logo 图片'); return; }
+    if (!logoImage) { toast(t('wmNoLogo')); return; }
     const scale = parseInt(wmLogoScale.value) / 100;
     const opacity = parseInt(wmLogoOpacity.value) / 100;
     const refDim = Math.min(c.width, c.height);
@@ -494,7 +503,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   }
 
   c.toBlob(blob => {
-    if (!blob) { toast('导出失败'); return; }
+    if (!blob) { toast(t('exportFail')); return; }
     const ext = origFileName.match(/\.(jpe?g|png|webp)$/i)?.[1] || 'png';
     const name = origFileName.replace(/\.[^.]+$/, '') + '-watermarked.' + ext;
     const a = document.createElement('a');
@@ -502,7 +511,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
     a.download = name;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast('下载完成');
+    toast(t('downloadComplete'));
   }, 'image/png');
 });
 

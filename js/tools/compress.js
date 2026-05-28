@@ -118,13 +118,13 @@ cpBtn.addEventListener('click', () => {
     if (done >= total) {
       processing = false;
       cpBtn.disabled = false;
-      pt.textContent = '✅ 完成';
+      pt.textContent = '✅ ' + t('done');
       pf.style.width = '100%';
       updateSticky();
       return;
     }
     const idx = idxs[done];
-    pt.textContent = `处理中 ${done + 1}/${total}: ${files[idx].name}`;
+    pt.textContent = t('processing') + ' ' + (done + 1) + '/' + total + ': ' + files[idx].name;
 
     const img = new Image();
     img.onload = () => {
@@ -254,7 +254,7 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     return;
   }
   // Multi-file ZIP
-  toast('正在打包...');
+  toast(t('packing'));
   try {
     const parts = [];
     compressed.forEach((blob, idx) => {
@@ -265,9 +265,9 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     const zipBlob = await zipResp.blob();
     const url = URL.createObjectURL(zipBlob);
     const a = document.createElement('a'); a.href = url; a.download = 'images.zip'; a.click();
-    toast('下载完成');
+    toast(t('downloadComplete'));
   } catch(e) {
-    toast('打包失败');
+    toast(t('packingFailed'));
     console.error(e);
   }
 });

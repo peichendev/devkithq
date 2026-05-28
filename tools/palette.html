@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Palette Extractor — DevKit HQ</title>
+<title data-i-title="pageTitlePalette">Color Palette Extractor — DevKit HQ</title>
 <meta name="description" content="Extract dominant colors from any image. Browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -58,7 +67,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div><div class="orb o5"></div></div></div></div>
+<div class="bg-demo"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div><div class="orb o5"></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -68,7 +77,7 @@
     <p data-i="taglinePalette">上传图片，自动提取主色调与配色方案</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
@@ -78,9 +87,9 @@
       <div class="dropzone-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="7.5" cy="7.5" r="1.5" fill="var(--accent)"/><circle cx="16.5" cy="7.5" r="1.5" fill="var(--accent)"/><circle cx="12" cy="14" r="1.5" fill="var(--accent)"/><circle cx="16.5" cy="16.5" r="1.5" fill="var(--accent)"/><circle cx="7.5" cy="16.5" r="1.5" fill="var(--accent)"/></svg>
       </div>
-      <div class="dropzone-title">拖拽或点击上传图片</div>
-      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
-      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <div class="dropzone-title" data-i="dropzoneTitle">拖拽或点击上传图片</div>
+      <div class="dropzone-sub" data-i="dropzoneSub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn"><span data-i="selectFile">选择文件</span></button>
       <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
     </div>
 
@@ -90,12 +99,12 @@
       <div class="pl-preview-row">
         <img class="pl-thumb" id="plThumb" alt="Source image">
         <div class="pl-meta">
-          <div>文件名：<strong id="plName">-</strong></div>
-          <div>尺寸：<strong id="plDims">-</strong></div>
-          <div>主色调：<strong id="plCount">-</strong></div>
+          <div><span data-i="paletteFileName">文件名：</span><strong id="plName">-</strong></div>
+          <div><span data-i="paletteDimensions">尺寸：</span><strong id="plDims">-</strong></div>
+          <div><span data-i="paletteDominant">主色调：</span><strong id="plCount">-</strong></div>
         </div>
         <div style="margin-left:auto">
-          <button class="btn btn-ghost btn-sm" id="newImageBtn">重新选择</button>
+          <button class="btn btn-ghost btn-sm" id="newImageBtn" data-i="resetImage">重新选择</button>
         </div>
       </div>
 
@@ -105,7 +114,7 @@
       <!-- Empty state -->
       <div class="pl-empty pl-hidden" id="plEmpty">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <p>无法提取颜色，请尝试其他图片</p>
+        <p data-i="paletteEmptyState">无法提取颜色，请尝试其他图片</p>
       </div>
     </div>
   </div>
@@ -147,7 +156,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -177,7 +186,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => fi.click())
 fi.addEventListener('change', e => { if (e.target.files[0]) { processImage(e.target.files[0]); fi.value = ''; } });
 
 function processImage(file) {
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast(t('unsupportedFormat')); return; }
 
   const img = new Image();
   img.onload = () => {
@@ -188,7 +197,7 @@ function processImage(file) {
 
     // Extract colors
     const colors = extractColors(img, 8);
-    document.getElementById('plCount').textContent = `${colors.length} 个`;
+    document.getElementById('plCount').textContent = `${colors.length} ${t('paletteColorsCount')}`;
 
     // Render swatches
     swatchGrid.innerHTML = '';
@@ -314,14 +323,14 @@ function createSwatch(color, isDominant) {
 
   const copyEl = document.createElement('div');
   copyEl.className = 'pl-swatch-copy';
-  copyEl.textContent = '点击复制';
+  copyEl.textContent = t('paletteClickCopy');
   colorEl.appendChild(copyEl);
 
   const infoEl = document.createElement('div');
   infoEl.className = 'pl-swatch-info';
   infoEl.innerHTML = `
     <div class="pl-swatch-hex">${color.hex.toUpperCase()}</div>
-    <div class="pl-swatch-pct">${color.pct.toFixed(1)}%${isDominant ? ' · 主色调' : ''}</div>
+    <div class="pl-swatch-pct">${color.pct.toFixed(1)}%${isDominant ? ' · ' + t('paletteDominantSuffix') : ''}</div>
   `;
 
   el.appendChild(colorEl);
@@ -330,10 +339,10 @@ function createSwatch(color, isDominant) {
   el.addEventListener('click', () => {
     copyToClipboard(color.hex.toUpperCase());
     // Brief visual feedback
-    copyEl.textContent = '已复制!';
+    copyEl.textContent = t('paletteCopied');
     copyEl.style.background = 'rgba(16,185,129,0.7)';
     setTimeout(() => {
-      copyEl.textContent = '点击复制';
+      copyEl.textContent = t('paletteClickCopy');
       copyEl.style.background = 'rgba(0,0,0,0.4)';
     }, 800);
   });

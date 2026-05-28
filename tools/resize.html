@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Resize & Crop — DevKit HQ</title>
+<title data-i-title="pageTitleResize">Image Resize & Crop — DevKit HQ</title>
 <meta name="description" content="Free online image crop and resize tool. Visual canvas editor with aspect ratio lock and preset sizes. Browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -56,7 +65,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="img"></div><div class="crop"><div class="handle h1"></div><div class="handle h2"></div><div class="handle h3"></div><div class="handle h4"></div></div></div></div></div></div>
+<div class="bg-demo"><div class="img"></div><div class="crop"><div class="handle h1"></div><div class="handle h2"></div><div class="handle h3"></div><div class="handle h4"></div></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -66,7 +75,7 @@
     <p data-i="taglineResize">可视化裁剪图片，支持锁定比例与预设尺寸</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
@@ -76,9 +85,9 @@
       <div class="dropzone-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M22 6l-4 4-3-3-4 4-3-3-4 4"/></svg>
       </div>
-      <div class="dropzone-title">拖拽或点击上传图片</div>
-      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
-      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <div class="dropzone-title" data-i="dropzoneTitle">拖拽或点击上传图片</div>
+      <div class="dropzone-sub" data-i="dropzoneSub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn"><span data-i="selectFile">选择文件</span></button>
       <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
     </div>
 
@@ -91,8 +100,8 @@
       <div class="rz-controls">
         <!-- Aspect ratio pills -->
         <div class="rz-row">
-          <label>比例：</label>
-          <button class="rz-pill active" data-ratio="">自由</button>
+          <label data-i="resizeRatio">比例：</label>
+          <button class="rz-pill active" data-ratio="" data-i="resizeFree">自由</button>
           <button class="rz-pill" data-ratio="1:1">1:1</button>
           <button class="rz-pill" data-ratio="4:3">4:3</button>
           <button class="rz-pill" data-ratio="16:9">16:9</button>
@@ -101,19 +110,19 @@
 
         <!-- Dimensions -->
         <div class="rz-row">
-          <label>尺寸：</label>
+          <label data-i="resizeDim">尺寸：</label>
           <div class="rz-dim">
             <input type="number" id="cropW" min="1" placeholder="W">
             <span>×</span>
             <input type="number" id="cropH" min="1" placeholder="H">
-            <button class="rz-swap" id="swapBtn" title="交换宽高">⇄</button>
+            <button class="rz-swap" id="swapBtn" title="交换宽高" data-i-alt="resizeSwapTitle">⇄</button>
           </div>
           <span style="color:var(--text-tertiary);font-size:var(--fs-xs)">px</span>
         </div>
 
         <!-- Presets -->
         <div class="rz-row">
-          <label>预设：</label>
+          <label data-i="resizePreset">预设：</label>
           <button class="rz-pill" data-preset="1920,1080">1920×1080</button>
           <button class="rz-pill" data-preset="1280,720">1280×720</button>
           <button class="rz-pill" data-preset="800,800">800×800</button>
@@ -123,12 +132,12 @@
 
         <!-- Actions -->
         <div class="rz-row" style="justify-content:space-between">
-          <button class="btn btn-ghost btn-sm" id="resetCropBtn">重置选区</button>
+          <button class="btn btn-ghost btn-sm" id="resetCropBtn" data-i="resizeResetSelection">重置选区</button>
           <div class="flex gap-sm">
-            <button class="btn btn-secondary btn-sm" id="newImageBtn">重新选择</button>
+            <button class="btn btn-secondary btn-sm" id="newImageBtn" data-i="resetImage">重新选择</button>
             <button class="btn btn-primary" id="downloadBtn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              下载裁剪结果
+              <span data-i="resizeDownload">下载裁剪结果</span>
             </button>
           </div>
         </div>
@@ -136,13 +145,13 @@
 
       <!-- Preview -->
       <div class="rz-preview-wrap">
-        <h3>预览</h3>
+        <h3 data-i="preview">预览</h3>
         <div class="rz-preview-inner">
           <canvas class="rz-preview-canvas" id="previewCanvas"></canvas>
           <div class="rz-preview-info">
-            <div>裁剪区域：<strong id="previewDim">-</strong></div>
-            <div>原始尺寸：<strong id="previewOrig">-</strong></div>
-            <div style="margin-top:4px;color:var(--text-tertiary)">拖拽选区四角或边缘调整</div>
+            <div><span data-i="resizeCropArea">裁剪区域：</span><strong id="previewDim">-</strong></div>
+            <div><span data-i="resizeOrigSize">原始尺寸：</span><strong id="previewOrig">-</strong></div>
+            <div style="margin-top:4px;color:var(--text-tertiary)" data-i="resizeDragHint">拖拽选区四角或边缘调整</div>
           </div>
         </div>
       </div>
@@ -186,7 +195,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -229,7 +238,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => fi.click())
 fi.addEventListener('change', e => { if (e.target.files[0]) { loadImage(e.target.files[0]); fi.value = ''; } });
 
 function loadImage(file) {
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast(t('unsupportedFormat')); return; }
   origFileName = file.name;
   const img = new Image();
   img.onload = () => {
@@ -679,7 +688,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   const ctx2 = c.getContext('2d');
   ctx2.drawImage(image, crop.x, crop.y, crop.w, crop.h, 0, 0, c.width, c.height);
   c.toBlob(blob => {
-    if (!blob) { toast('导出失败'); return; }
+    if (!blob) { toast(t('exportFail')); return; }
     const ext = origFileName.match(/\.(jpe?g|png|webp)$/i)?.[1] || 'png';
     const name = origFileName.replace(/\.[^.]+$/, '') + '-cropped.' + ext;
     const a = document.createElement('a');
@@ -687,7 +696,7 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
     a.download = name;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast('下载完成');
+    toast(t('downloadComplete'));
   }, 'image/png');
 });
 

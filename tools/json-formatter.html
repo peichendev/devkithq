@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON Formatter — DevKit HQ</title>
+<title data-i-title="pageTitleJson">JSON Formatter — DevKit HQ</title>
 <meta name="description" content="Free online JSON formatter and validator. Beautify, minify, validate JSON with error highlighting. All browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -55,7 +64,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="brace b1">{</div><div class="brace b2">}</div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div><div class="line l5"></div></div></div></div>
+<div class="bg-demo"><div class="brace b1">{</div><div class="brace b2">}</div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="line l4"></div><div class="line l5"></div></div>
 
 <nav class="nav" id="nav"></nav>
 
@@ -65,16 +74,16 @@
     <p data-i="taglineJson">粘贴 JSON 一键美化或压缩，错误自动标注行号，支持一键复制</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
   <div class="tool-wrap">
-    <textarea class="input" id="inputEl" placeholder="在此粘贴 JSON..."></textarea>
+    <textarea class="input" id="inputEl" data-i-placeholder="jsonPlaceholder" placeholder="在此粘贴 JSON..."></textarea>
 
     <div id="errorBox" style="margin-top:12px"></div>
     <div class="stat-row" id="statRow" style="display:none">
-      <span id="statLines">0</span> 行 · <span id="statChars">0</span> 字符 · <span id="statSize">0</span>
+      <span id="statLines">0</span> <span data-i="jsonLines">行</span> · <span id="statChars">0</span> <span data-i="jsonChars">字符</span> · <span id="statSize">0</span>
     </div>
 
     <div class="tool-toolbar" style="margin-top:12px">
@@ -90,11 +99,11 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         复制结果
       </button>
-      <button class="btn btn-ghost" id="clearBtn">清空</button>
+      <button class="btn btn-ghost" id="clearBtn"><span data-i="jsonClearBtn">清空</span></button>
     </div>
 
     <div class="tool-output" style="margin-top:16px">
-      <div class="code-block" id="outputEl" style="min-height:160px;color:var(--text-secondary)">等待输入...</div>
+      <div class="code-block" id="outputEl" style="min-height:160px;color:var(--text-secondary)" data-i="jsonWaiting">等待输入...</div>
     </div>
   </div>
 </main>
@@ -135,7 +144,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -241,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lastOutput = '';
   });
   document.getElementById('copyBtn').addEventListener('click', () => {
-    if (lastOutput) { copyToClipboard(lastOutput); } else { toast('没有可复制的内容'); }
+    if (lastOutput) { copyToClipboard(lastOutput); } else { toast(t('noContentToCopy')); }
   });
 
   // Auto-format on Ctrl+Enter

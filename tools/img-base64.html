@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image to Base64 — DevKit HQ</title>
+<title data-i-title="pageTitleImgBase64">Image to Base64 — DevKit HQ</title>
 <meta name="description" content="Encode images to Base64 text. Browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -37,7 +46,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="stream s1">iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==</div><div class="stream s2">R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7</div><div class="stream s3">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==</div><div class="stream s4">/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/aAAgBAQAAAAAA</div></div></div></div>
+<div class="bg-demo"><div class="stream s1">iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==</div><div class="stream s2">R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7</div><div class="stream s3">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==</div><div class="stream s4">/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/aAAgBAQAAAAAA</div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
@@ -46,37 +55,37 @@
     <p data-i="taglineImgBase64">将图片编码为 Base64 文本，可直接嵌入 HTML/CSS</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
   <div class="b64-wrap">
     <div class="dropzone" id="dropzone">
       <div class="dropzone-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-      <div class="dropzone-title">拖拽或点击上传图片</div>
-      <div class="dropzone-sub">支持 JPEG / PNG / WebP / GIF / SVG · 最大 10MB</div>
-      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <div class="dropzone-title" data-i="dropzoneTitle">拖拽或点击上传图片</div>
+      <div class="dropzone-sub" data-i="dropzoneSub">支持 JPEG / PNG / WebP / GIF / SVG · 最大 10MB</div>
+      <button class="btn btn-primary" id="uploadBtn"><span data-i="selectFile">选择文件</span></button>
       <input type="file" id="fileInput" accept="image/*" hidden>
     </div>
 
     <div id="resultArea" style="display:none">
       <div class="b64-preview"><img id="preview" alt="Preview"></div>
-      <div class="b64-info"><span>格式: <strong id="imgFmt">-</strong></span><span>原始大小: <strong id="imgSize">-</strong></span></div>
+      <div class="b64-info"><span data-i="imgFormat">格式:</span><span style="display:none">: </span><strong id="imgFmt">-</strong><span>原始大小: <strong id="imgSize">-</strong></span></div>
       <div class="b64-output">
-        <label><strong>Base64 数据 <span style="font-weight:400;color:var(--text-tertiary)">(点击下方复制)</span></strong></label>
+        <label><strong data-i="imgBase64Data">Base64 数据</strong> <span style="font-weight:400;color:var(--text-tertiary)">(点击下方复制)</span></label>
         <textarea class="input input-mono" id="b64Text" rows="6" readonly style="cursor:pointer;font-size:var(--fs-xs);word-break:break-all" onclick="this.select();copyToClipboard(this.value)"></textarea>
       </div>
       <div class="b64-output mt">
-        <label><strong>HTML &lt;img&gt; 标签</strong></label>
+        <label><strong data-i="imgHtmlTag">HTML &lt;img&gt; 标签</strong></label>
         <textarea class="input input-mono" id="htmlTag" rows="2" readonly style="cursor:pointer;font-size:var(--fs-xs)" onclick="this.select();copyToClipboard(this.value)"></textarea>
       </div>
       <div class="b64-output mt">
-        <label><strong>CSS background-image</strong></label>
+        <label><strong data-i="imgCssBg">CSS background-image</strong></label>
         <textarea class="input input-mono" id="cssBg" rows="2" readonly style="cursor:pointer;font-size:var(--fs-xs)" onclick="this.select();copyToClipboard(this.value)"></textarea>
       </div>
       <div class="flex gap-sm mt-md justify-between">
-        <button class="btn btn-ghost btn-sm" id="resetBtn">重新选择</button>
-        <button class="btn btn-primary" id="copyBtn">📋 复制 Base64</button>
+        <button class="btn btn-ghost btn-sm" id="resetBtn" data-i="resetImage">重新选择</button>
+        <button class="btn btn-primary" id="copyBtn"><span data-i="imgCopyBtn">📋 复制 Base64</span></button>
       </div>
     </div>
   </div>
@@ -118,7 +127,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -144,8 +153,8 @@ document.getElementById('uploadBtn').addEventListener('click', () => fi.click())
 fi.addEventListener('change', e => { if (e.target.files[0]) { loadFile(e.target.files[0]); fi.value = ''; } });
 
 function loadFile(file) {
-  if (!file.type.startsWith('image/')) { toast('请选择图片文件'); return; }
-  if (file.size > 10*1024*1024) { toast('文件最大 10MB'); return; }
+  if (!file.type.startsWith('image/')) { toast(t('imgSelectImage')); return; }
+  if (file.size > 10*1024*1024) { toast(t('imgMaxSize')); return; }
   const reader = new FileReader();
   reader.onload = () => {
     const b64 = reader.result;

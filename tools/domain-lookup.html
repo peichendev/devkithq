@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Domain Lookup — DevKit HQ</title>
+<title data-i-title="pageTitleDomain">Domain Lookup — DevKit HQ</title>
 <meta name="description" content="Free domain WHOIS lookup tool. Check domain availability and registration info.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -57,7 +66,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="globe"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div></div></div>
+<div class="bg-demo"><div class="globe"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
@@ -66,24 +75,24 @@
     <p data-i="taglineDomain">查询域名 WHOIS 信息，判断能否注册</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
   <div class="dl-wrap">
     <div class="dl-search">
-      <input type="text" class="input input-mono" id="domainInput" placeholder="输入域名，如 example.com" autocomplete="off" autofocus>
+      <input type="text" class="input input-mono" id="domainInput" data-i-placeholder="dlInputPlaceholder" placeholder="输入域名，如 example.com" autocomplete="off" autofocus>
       <button class="btn btn-primary" id="searchBtn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         查询
       </button>
     </div>
     <div class="dl-examples">
-      <span style="font-size:var(--fs-xs);color:var(--text-tertiary);padding:4px 0">试试:</span>
+      <span style="font-size:var(--fs-xs);color:var(--text-tertiary);padding:4px 0" data-i="dlExamples">试试:</span>
       <button class="dl-example" onclick="lookup('google.com')">google.com</button>
       <button class="dl-example" onclick="lookup('github.com')">github.com</button>
       <button class="dl-example" onclick="lookup('devkithq.cn')">devkithq.cn</button>
-      <button class="dl-example" onclick="lookup('this-probably-not-taken-2026.com')">未注册示例</button>
+      <button class="dl-example" onclick="lookup('this-probably-not-taken-2026.com')" data-i="dlNotRegistered">未注册示例</button>
     </div>
 
     <div id="result" class="dl-result"></div>
@@ -126,7 +135,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -150,47 +159,49 @@ input.addEventListener('keydown', e => { if (e.key === 'Enter') lookup(input.val
 function lookup(domain) {
   if (!domain) return;
   input.value = domain;
-  result.innerHTML = `<div class="dl-loading"><div class="spinner"></div><div>查询中...</div></div>`;
+  result.innerHTML = `<div class="dl-loading"><div class="spinner"></div><div>${t('dlQuerying')}</div></div>`;
 
   fetch(`/api/domain-lookup?domain=${encodeURIComponent(domain)}`)
     .then(r => r.json())
     .then(data => {
       if (data.error) {
-        result.innerHTML = `<div class="dl-card" style="border-color:var(--red)"><div class="dl-card-header"><span class="dl-domain">${escapeHtml(domain)}</span><span class="dl-badge error">查询失败</span></div><div style="color:var(--red);font-size:var(--fs-sm)">${escapeHtml(data.error)}</div></div>`;
+        result.innerHTML = `<div class="dl-card" style="border-color:var(--red)"><div class="dl-card-header"><span class="dl-domain">${escapeHtml(domain)}</span><span class="dl-badge error">${t('dlFail')}</span></div><div style="color:var(--red);font-size:var(--fs-sm)">${escapeHtml(data.error)}</div></div>`;
       } else if (data.available) {
         result.innerHTML = `
           <div class="dl-card available">
             <div class="dl-card-header">
               <span class="dl-domain">${escapeHtml(data.domain)}</span>
-              <span class="dl-badge avail">可注册 ✨</span>
+              <span class="dl-badge avail">${t('dlAvailable')}</span>
             </div>
             <div style="color:var(--green);font-size:var(--fs-base);font-weight:600">${escapeHtml(data.message)}</div>
           </div>`;
       } else {
-        const created = data.created ? new Date(data.created).toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'}) : '未知';
-        const expires = data.expires ? new Date(data.expires).toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'}) : '未知';
-        const updated = data.updated ? new Date(data.updated).toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'}) : '未知';
+        const locale = getLocale();
+        const dtOpts = {year:'numeric',month:'long',day:'numeric'};
+        const created = data.created ? new Date(data.created).toLocaleDateString(locale, dtOpts) : t('dlUnknown');
+        const expires = data.expires ? new Date(data.expires).toLocaleDateString(locale, dtOpts) : t('dlUnknown');
+        const updated = data.updated ? new Date(data.updated).toLocaleDateString(locale, dtOpts) : t('dlUnknown');
         result.innerHTML = `
           <div class="dl-card">
             <div class="dl-card-header">
               <span class="dl-domain">${escapeHtml(data.domain)}</span>
-              <span class="dl-badge reg">已注册</span>
+              <span class="dl-badge reg">${t('dlRegistered')}</span>
             </div>
-            <div class="dl-row"><span class="dl-label">后缀</span><span class="dl-value">${escapeHtml(data.tld)}</span></div>
-            <div class="dl-row"><span class="dl-label">注册商</span><span class="dl-value">${escapeHtml(data.registrar)}</span></div>
-            <div class="dl-row"><span class="dl-label">状态</span><span class="dl-value">${escapeHtml(data.status)}</span></div>
-            <div class="dl-row"><span class="dl-label">创建日期</span><span class="dl-value">${created}</span></div>
-            <div class="dl-row"><span class="dl-label">过期日期</span><span class="dl-value">${expires}</span></div>
-            <div class="dl-row"><span class="dl-label">最后更新</span><span class="dl-value">${updated}</span></div>
+            <div class="dl-row"><span class="dl-label">${t('dlSuffix')}</span><span class="dl-value">${escapeHtml(data.tld)}</span></div>
+            <div class="dl-row"><span class="dl-label">${t('dlRegistrar')}</span><span class="dl-value">${escapeHtml(data.registrar)}</span></div>
+            <div class="dl-row"><span class="dl-label">${t('dlStatus')}</span><span class="dl-value">${escapeHtml(data.status)}</span></div>
+            <div class="dl-row"><span class="dl-label">${t('dlCreated')}</span><span class="dl-value">${created}</span></div>
+            <div class="dl-row"><span class="dl-label">${t('dlExpires')}</span><span class="dl-value">${expires}</span></div>
+            <div class="dl-row"><span class="dl-label">${t('dlUpdated')}</span><span class="dl-value">${updated}</span></div>
             ${data.nameservers && data.nameservers.length ? `
-            <div style="padding:8px 0"><span class="dl-label" style="margin-bottom:6px;display:block">DNS 服务器</span>
+            <div style="padding:8px 0"><span class="dl-label" style="margin-bottom:6px;display:block">${t('dlDNS')}</span>
               <div class="dl-ns">${data.nameservers.map(ns => `<span>${escapeHtml(ns)}</span>`).join('')}</div>
             </div>` : ''}
           </div>`;
       }
     })
     .catch(e => {
-      result.innerHTML = `<div class="dl-card" style="border-color:var(--red)"><div style="color:var(--red);font-size:var(--fs-sm)">网络错误: ${escapeHtml(e.message)}</div></div>`;
+      result.innerHTML = `<div class="dl-card" style="border-color:var(--red)"><div style="color:var(--red);font-size:var(--fs-sm)">${t('dlNetworkError')} ${escapeHtml(e.message)}</div></div>`;
     });
 }
 

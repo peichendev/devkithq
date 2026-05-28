@@ -3,8 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Format Converter — DevKit HQ</title>
+<title data-i-title="pageTitleConvert">Format Converter — DevKit HQ</title>
 <meta name="description" content="Convert images between JPEG, PNG, WebP formats. Browser-based, privacy-first.">
+<meta property="og:title" content="DevKit HQ">
+<meta property="og:description" content="12 free online tools for images and code. All browser-based, privacy-first.">
+<meta property="og:image" content="https://devkithq.cn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://devkithq.cn">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devkithq.cn/assets/og.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg">
 <link rel="stylesheet" href="../css/global.css">
 <style>
@@ -38,7 +47,7 @@
 </style>
 </head>
 <body>
-<div class="bg-demo"><div class="fmt f1">JPEG</div><div class="fmt f2">PNG</div><div class="fmt f3">WebP</div></div></div></div>
+<div class="bg-demo"><div class="fmt f1">JPEG</div><div class="fmt f2">PNG</div><div class="fmt f3">WebP</div></div>
 <nav class="nav" id="nav"></nav>
 
 <main class="container page">
@@ -47,36 +56,36 @@
     <p data-i="taglineConvert">JPEG / PNG / WebP 互转，可调质量与尺寸</p>
   </div>
 <div class="ad-slot">
-  <div class="ad-placeholder">Advertisement · 广告位</div>
+  <div class="ad-placeholder" data-i="adPlaceholder">Advertisement · 广告位</div>
 </div>
 
 
   <div class="cv-wrap">
     <div class="dropzone" id="dropzone">
       <div class="dropzone-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M16 3h5v5"/><path d="M21 3l-7.5 7.5"/><path d="M8 21H3v-5"/><path d="M3 21l7.5-7.5"/></svg></div>
-      <div class="dropzone-title">拖拽或点击上传图片</div>
-      <div class="dropzone-sub">支持 JPEG / PNG / WebP · 最大 20MB</div>
-      <button class="btn btn-primary" id="uploadBtn">选择文件</button>
+      <div class="dropzone-title" data-i="dropzoneTitle">拖拽或点击上传图片</div>
+      <div class="dropzone-sub" data-i="dropzoneSub">支持 JPEG / PNG / WebP · 最大 20MB</div>
+      <button class="btn btn-primary" id="uploadBtn"><span data-i="selectFile">选择文件</span></button>
       <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
     </div>
 
     <div id="resultArea" style="display:none">
-      <div class="cv-preview"><img id="preview" alt="Preview"></div>
+      <div class="cv-preview"><img id="preview" alt="Preview" data-i-alt="preview"></div>
       <div class="cv-info">
-        <div class="cv-info-item"><span class="lbl">原始</span><span class="val" id="origSize">-</span></div>
+        <div class="cv-info-item"><span class="lbl" data-i="original">原始</span><span class="val" id="origSize">-</span></div>
         <span style="color:var(--text-tertiary)">→</span>
-        <div class="cv-info-item"><span class="lbl">转换后</span><span class="val" style="color:var(--green)" id="convSize">-</span></div>
+        <div class="cv-info-item"><span class="lbl" data-i="converted">转换后</span><span class="val" style="color:var(--green)" id="convSize">-</span></div>
       </div>
       <div class="cv-controls">
-        <div class="mc-g"><label>输出格式</label><select class="input" id="outFmt"><option value="jpeg">JPEG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
-        <div class="mc-g"><label>质量 <span style="color:var(--accent)" id="qVal">85</span>%</label><input type="range" id="qSlider" min="5" max="100" value="85"></div>
-        <div class="mc-g"><label>最大宽度</label><select class="input" id="maxW"><option value="0">原始</option><option value="1920">1920px</option><option value="1280">1280px</option><option value="800">800px</option></select></div>
+        <div class="mc-g"><label data-i="outputFormat">输出格式</label><select class="input" id="outFmt"><option value="jpeg">JPEG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
+        <div class="mc-g"><label><span data-i="quality">质量</span> <span style="color:var(--accent)" id="qVal">85</span>%</label><input type="range" id="qSlider" min="5" max="100" value="85"></div>
+        <div class="mc-g"><label data-i="maxWidth">最大宽度</label><select class="input" id="maxW"><option value="0">原始</option><option value="1920">1920px</option><option value="1280">1280px</option><option value="800">800px</option></select></div>
       </div>
       <div class="flex gap-sm mt-md justify-between">
-        <button class="btn btn-ghost btn-sm" id="resetBtn">重新选择</button>
+        <button class="btn btn-ghost btn-sm" id="resetBtn" data-i="resetImage">重新选择</button>
         <button class="btn btn-primary" id="downloadBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          下载转换后图片
+          <span data-i="downloadConverted">下载转换后图片</span>
         </button>
       </div>
     </div>
@@ -119,7 +128,7 @@
       <h4 data-i="footerAbout">关于</h4>
       <ul>
         <li><a href="https://github.com/peichendev/devkithq" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="mailto:peichen.dev@gmail.com">反馈建议</a></li>
+        <li><a href="mailto:peichen.dev@gmail.com" data-i="feedback">反馈建议</a></li>
       </ul>
     </div>
   </div>
@@ -147,7 +156,7 @@ document.getElementById('uploadBtn').addEventListener('click', () => fi.click())
 fi.addEventListener('change', e => { if (e.target.files[0]) { loadFile(e.target.files[0]); fi.value = ''; } });
 
 function loadFile(file) {
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast('不支持的格式'); return; }
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { toast(t('unsupportedFormat')); return; }
   origFile = file;
   const img = new Image();
   img.onload = () => {

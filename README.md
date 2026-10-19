@@ -10,6 +10,8 @@
 [![No build step](https://img.shields.io/badge/build-none-brightgreen)](.)
 [![Vanilla JS](https://img.shields.io/badge/stack-vanilla%20JS-f7df1e?logo=javascript&logoColor=black)](.)
 
+![DevKit HQ — 12 free browser tools](docs/preview.png)
+
 No signup, no uploads, no tracking. Images are processed with the Canvas API on your own machine — nothing is ever sent to a server.
 
 ## Tools
